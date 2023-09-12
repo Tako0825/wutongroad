@@ -13,7 +13,7 @@ import { JwtStrategy } from './common/jwt.strategy';
       global: true,
       useFactory: () => {
         return {
-          secret: "wutongroad",
+          secret: process.env.SECRET_OR_KEY,
           signOptions: { expiresIn:'300d' },
         }
       }

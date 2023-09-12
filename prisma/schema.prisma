@@ -8,10 +8,9 @@ datasource db {
 }
 
 model user {
-  id       Int     @id @default(autoincrement()) @db.UnsignedInt
-  name     String
-  password String
-  role     String?
+  openid      String  @id
+  session_key String
+  role        String?
 }
 
 model category {

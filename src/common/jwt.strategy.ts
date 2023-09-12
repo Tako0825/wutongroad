@@ -8,13 +8,21 @@ export class JwtStrategy extends PassportStrategy(Strategy,"jwt") {
     ) {
         super({
             jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
-            secretOrKey: "wutongroad"
+            secretOrKey: process.env.SECRET_OR_KEY
         })
     }
 
-    async validate({ sub: id}) {
-        return this.prisma.user.findUnique({
-            where: { id }
-        })
+    async validate(payload: any) {
+        const { openid } = payload.params;
+
+        // 根据openid从数据库或其他数据源中获取用户信息
+        const user = await this.prisma.user.findUnique({
+            where: {
+                openid: openid
+            }
+        });
+    
+        // 返回验证后的用户信息
+        return user;
     }
 }

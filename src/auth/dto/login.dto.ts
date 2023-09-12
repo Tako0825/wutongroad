@@ -1,10 +1,6 @@
-import { IsNotEmpty, Validate } from "class-validator"
-import { MatchRule } from "../rules/match.rule"
+import { IsNotEmpty } from "class-validator";
 
 export class LoginDTO {
-    @IsNotEmpty({ message: "用户名不能为空" })
-    @Validate(MatchRule, { message: "用户名和密码不匹配" })
-    name: string
-    @IsNotEmpty({ message: "密码不能为空" })
-    password: string
+    @IsNotEmpty({ message:"请你使用 wx.login 获取正确的 code" })
+    js_code: string
 }
