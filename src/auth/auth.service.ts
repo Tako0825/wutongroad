@@ -3,11 +3,13 @@ import { RegisterDTO } from './dto/register.dto';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { hash } from "argon2"
 import { LoginDTO } from './dto/login.dto';
+import { JwtService } from '@nestjs/jwt';
 
 @Injectable()
 export class AuthService {
     constructor(
-        private prisma:PrismaService
+        private prisma:PrismaService,
+        private jwt:JwtService
     ) {}
 
     // 服务 - 注册
@@ -42,7 +44,11 @@ export class AuthService {
                 id: user.id,
                 name: user.name,
                 role: user.role
-            }
+            },
+            token: await this.jwt.signAsync({
+                sub: user.id,
+                name: user.name
+            })
         }
     }
 

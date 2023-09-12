@@ -15,7 +15,7 @@ export class MatchRule implements ValidatorConstraintInterface {
                     name: value
                 }
             })
-            resolve(user && await verify(user.password, (args.object as any).password))
+            resolve(user && (args.object as any).password && await verify(user.password, (args.object as any).password))
         })
     }
 }

@@ -1,6 +1,7 @@
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
-import { ResponseInterceptor } from './response.interceptor';
+import { ResponseInterceptor } from './common/response.interceptor';
+import { HttpFilter } from './common/http.filter';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
@@ -10,6 +11,9 @@ async function bootstrap() {
 
   // 响应拦截器
   app.useGlobalInterceptors(new ResponseInterceptor())
+
+  // 异常拦截器
+  app.useGlobalFilters(new HttpFilter())
 
   // 监听端口 - 3000
   await app.listen(3000);
