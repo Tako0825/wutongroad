@@ -2,7 +2,7 @@ import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { LoginDTO } from './dto/login.dto';
 import { JwtService } from '@nestjs/jwt';
 import { PrismaService } from 'src/prisma/prisma.service';
-import { UserModel } from './model/user.dto';
+import { UserModel } from './model/user.model';
 
 @Injectable()
 export class AuthService {

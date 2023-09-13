@@ -3,18 +3,20 @@ import { AuthService } from './auth.service';
 import { Validation } from 'src/common/validation';
 import { LoginDTO } from './dto/login.dto';
 import { AuthGuard } from '@nestjs/passport';
-import { UserModel } from './model/user.dto';
+import { UserModel } from './model/user.model';
 
 @Controller('auth')
 export class AuthController {
   constructor(private readonly authService: AuthService) {}
 
+  // API - 登录
   @Post("login")
   @UsePipes(Validation)
   login(@Body() body:LoginDTO) {
     return this.authService.login(body)
   }
 
+  // API - token自动登录
   @Get("verify")
   @UseGuards(AuthGuard("jwt"))
   verify(@Req() req:any) {

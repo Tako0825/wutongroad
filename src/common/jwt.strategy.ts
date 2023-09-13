@@ -16,7 +16,7 @@ export class JwtStrategy extends PassportStrategy(Strategy,"jwt") {
         const { openid } = payload.params;
 
         // 根据openid从数据库或其他数据源中获取用户信息
-        const user = await this.prisma.user.findUnique({
+        const user = await this.prisma.user.findFirst({
             where: {
                 openid: openid
             }
