@@ -11,6 +11,7 @@ model user {
   openid      String  @id
   session_key String
   role        String?
+  nickname    String
 }
 
 model category {

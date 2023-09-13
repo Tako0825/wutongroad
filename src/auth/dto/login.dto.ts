@@ -1,6 +1,6 @@
 import { IsNotEmpty } from "class-validator";
 
 export class LoginDTO {
-    @IsNotEmpty({ message:"请你使用 wx.login 获取正确的 code" })
+    @IsNotEmpty({ message:"js_code不能为空, 请使用 wx.login 获取" })
     js_code: string
 }

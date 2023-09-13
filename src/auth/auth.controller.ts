@@ -1,8 +1,9 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, UsePipes, UseGuards } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, UsePipes, UseGuards, Req } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { Validation } from 'src/common/validation';
 import { LoginDTO } from './dto/login.dto';
 import { AuthGuard } from '@nestjs/passport';
+import { UserModel } from './model/user.dto';
 
 @Controller('auth')
 export class AuthController {
@@ -16,9 +17,9 @@ export class AuthController {
 
   @Get("verify")
   @UseGuards(AuthGuard("jwt"))
-  test() {
-    return {
-      message: "令牌验证成功"
-    }
+  verify(@Req() req:any) {
+    // 根据 token 获取的当前用户 req.user
+    const user:UserModel = req.user
+    return this.authService.verify(user)
   }
 }

@@ -16,7 +16,7 @@ export class HttpFilter implements ExceptionFilter {
         code: status,
         message: exception.message,
         data: {
-          message: "无效的身份验证令牌"
+          tip: "无效的身份验证令牌"
         }
      })
     } 
@@ -27,7 +27,7 @@ export class HttpFilter implements ExceptionFilter {
         code: status,
         message: exception.message,
         data: {
-          message: "数据验证失败",
+          tip: "数据验证失败",
           ...exception.getResponse() as object
         }
       })
@@ -35,11 +35,11 @@ export class HttpFilter implements ExceptionFilter {
 
     // 出口
     else {
-      response.status(status).json({
-        code: status,
-        message: exception.message,
+      response.status(404).json({
+        code: 404,
+        message: exception?.message,
         data: {
-          message: "发现异常"
+          tip: "发现异常"
         }
       })
     }
