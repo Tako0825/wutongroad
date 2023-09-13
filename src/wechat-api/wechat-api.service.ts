@@ -3,21 +3,28 @@ import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 @Injectable()
 export class WechatApiService {
 
-    public async get(url:string, params: Record<string, any>) {
+    // GET
+    public async get(url:string, params: any, body?:any, headers?: any) {
         // params => query 转化
         const queryString = Object.keys(params)
         .map(key => `${encodeURIComponent(key)}=${encodeURIComponent(params[key])}`)
         .join('&');
+        console.log(`${url}?${queryString}`);
         
-        try {
-            const response = await fetch(`${url}?${queryString}`)
-            const data = await response.json()
-            return data
-        } catch(error) {
-            throw new HttpException({
-                code: 404,
-                message: "调用失败 - 微信开放接口 (请检查请求参数)",
-            }, HttpStatus.NOT_FOUND)
-        }
+        const response = await fetch(`${url}?${queryString}`,{
+            method: "GET",
+            headers: {
+                "Content-Type": "application/json",
+                ...headers
+            },
+            body
+        })
+        return await response.json()
+    }
+
+    // POST
+    public async post(url:string, body: Record<string, any>) {
+        const response = await fetch(url, body)
+        return await response.json()
     }
 }
