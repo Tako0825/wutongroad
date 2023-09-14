@@ -3,13 +3,10 @@ import { AuthModule } from './auth/auth.module';
 import { PrismaModule } from './prisma/prisma.module';
 import { JwtModule } from "@nestjs/jwt"
 import { JwtStrategy } from './common/jwt.strategy';
-import { AccessTokenModule } from './auth/access-token/access-token.module';
 import { WechatApiModule } from './wechat-api/wechat-api.module';
 
 @Module({
   imports: [
-    AuthModule,
-    PrismaModule,
     // 异步注册 - JWT
     JwtModule.registerAsync({
       global: true,
@@ -20,7 +17,8 @@ import { WechatApiModule } from './wechat-api/wechat-api.module';
         }
       }
     }),
-    AccessTokenModule,
+    AuthModule,
+    PrismaModule,
     WechatApiModule,
   ],
   controllers: [],

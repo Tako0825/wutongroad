@@ -1,22 +1,27 @@
-import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
+import { WechatApiUrl } from 'src/enum/WechatApiUrl';
+import { WechatApiService } from 'src/wechat-api/wechat-api.service';
 
 @Injectable()
 export class AccessTokenService {
     public access_token:string
     private expires_in:number
     
-    constructor() {
+    constructor(
+        private wechatApi:WechatApiService
+    ) {
         this.init()
     }
 
     private async init() {
         // access_token - 获取到的凭证
         // expires_in - 凭证有效时间，单位：秒。目前是7200秒之内的值。
-        const { access_token, expires_in } = await this.getAccessToken()
+        const data = await this.getAccessToken()
+        const { access_token, expires_in } = data
         this.access_token = access_token
         this.expires_in = expires_in * 1000
-        
-        // 每隔 2 小时刷新 access_token
+        console.log(data);
+        // 每隔 2 小时更新一次 access_token
         // setInterval(() => {
         //     this.updateAcessToken()
         // }, this.expires_in)
@@ -24,20 +29,16 @@ export class AccessTokenService {
 
     // 获取 access_token
     private async getAccessToken() {
-        const url = "https://api.weixin.qq.com/cgi-bin/stable_token"
+        const url = WechatApiUrl.getAccessToken
         const body = {
             grant_type: "client_credential",
             appid: process.env.APP_ID,
             secret: process.env.APP_SECRET,
         }
-        const response = await fetch(url, {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json"
-            },
-            body: JSON.stringify(body)
-        })
-        return await response.json()
+        const headers = {
+            "Content-Type": "application/json"
+        }
+        return await this.wechatApi.post(url, body, headers)
     }
 
     // 每隔 2 小时更新 access_token
