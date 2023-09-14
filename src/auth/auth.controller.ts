@@ -4,7 +4,6 @@ import { Validation } from 'src/common/validation';
 import { LoginDTO } from './dto/login.dto';
 import { AuthGuard } from '@nestjs/passport';
 import { UserModel } from './model/user.model';
-import { VerifyDTO } from './dto/verify.dto';
 
 @Controller('auth')
 export class AuthController {
@@ -18,12 +17,12 @@ export class AuthController {
   }
 
   // API - token自动登录
-  @Post("verify")
+  @Get("verify")
   @UsePipes(Validation)
   @UseGuards(AuthGuard("jwt"))
-  verify(@Req() req:any, @Body() body:VerifyDTO) {
+  verify(@Req() req:any) {
     // 根据 token 获取的当前用户 req.user
     const user:UserModel = req.user
-    return this.authService.verify(user, body)
+    return this.authService.verify(user)
   }
 }

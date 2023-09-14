@@ -4,20 +4,15 @@ import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 export class WechatApiService {
 
     // GET
-    public async get(url:string, params: any, body?:any, headers?: any) {
+    public async get(url:string, params: Record<string, any>, headers?: Record<string, any>) {
         // params => query 转化
         const queryString = Object.keys(params)
         .map(key => `${encodeURIComponent(key)}=${encodeURIComponent(params[key])}`)
         .join('&');
-        console.log(`${url}?${queryString}`);
         
         const response = await fetch(`${url}?${queryString}`,{
             method: "GET",
-            headers: {
-                "Content-Type": "application/json",
-                ...headers
-            },
-            body
+            headers
         })
         return await response.json()
     }

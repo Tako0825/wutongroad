@@ -3,56 +3,29 @@ import { LoginDTO } from './dto/login.dto';
 import { JwtService } from '@nestjs/jwt';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { UserModel } from './model/user.model';
-import { AccessTokenService } from 'src/auth/access-token/access-token.service';
-import { VerifyDTO } from './dto/verify.dto';
 import { WechatApiService } from 'src/wechat-api/wechat-api.service';
 import { WechatApiUrl } from 'src/enum/WechatApiUrl';
-import { createHash } from "crypto"
 
 @Injectable()
 export class AuthService {
     constructor(
         private jwt:JwtService,
         private prisma:PrismaService,
-        private accessToken:AccessTokenService,
         private wechatApi:WechatApiService
     ) {}
 
     // 服务 - 自动登录
-    public async verify(user:UserModel, body:VerifyDTO) {
-        // ...有待补充: 这里验证 session_key是否有效
-        const { openid, session_key } = user
-        const { rawData } = body
-        const sha1Hash = createHash('sha1');
-        sha1Hash.update(rawData + session_key, "utf-8");
-        // ...需要修改: 这里 signature 无效
-        const signature = sha1Hash.digest('base64');
-
-        const data = await this.WechatCheckSessionKey(openid, signature)
-        console.log(data);
-    }
-
-    // 自动登录(1) - 校验登录态
-    private async WechatCheckSessionKey(openid: string, signature: string) {
-        const url = WechatApiUrl.checkSessionKey
-        const params = {
-            access_token : `${this.accessToken.access_token}`,
-            openid,
-            signature,
-            sig_method: "hmac_sha256"
-        }
-        
-        const queryString = Object.keys(params)
-        .map(key => `${encodeURIComponent(key)}=${encodeURIComponent(params[key])}`)
-        .join('&');
-        const response = await fetch(`${url}?${queryString}`,{
-            method: "GET",
-            headers: {
-            'Content-Type': 'application/json',
+    public async verify(user:UserModel) {
+        const { openid, session_key, role, nickname } = user
+        // 选择有需要的用户信息返回给前端
+        return {
+            userInfo: {
+                openid,
+                session_key,
+                role,
+                nickname
             }
-        })
-        return await response.json()
-        // 调用微信开放接口 - 小程序登录
+        }
     }
 
     // 服务 - 登录
@@ -70,13 +43,21 @@ export class AuthService {
             js_code,
             grant_type: "authorization_code"
         }
-        // 调用微信开放接口 - 小程序登录
+        // 调用微信开放接口 - 小程序登录返回 openid & session_key
         const data = await this.wechatApi.get(url, params)
-        // 若是首次登录 - 自动注册
-        this.register(data)
-        
+        // 根据 openid 获取用户信息
+        const user = await this.getUserInfo(data)
+        // 选择有需要的用户信息返回给前端
+        const { openid, session_key, role, nickname } = user
         return {
             tip: "登录成功",
+            userInfo: {
+                openid,
+                session_key,
+                role,
+                nickname
+            },
+            // 手动登录返回新的 token
             token: await this.jwt.signAsync({
                 params: {
                     session_key: (data as any).session_key,
@@ -87,17 +68,17 @@ export class AuthService {
         }
     }
 
-    // 登录(2) - 自动注册
-    private async register(data: any) {
+    // 登录(1.1) - 获取用户信息
+    private async getUserInfo(data: any) {
         // 判断用户是否存在
-        const user = await this.prisma.user.findFirst({
+        let user = await this.prisma.user.findFirst({
             where: {
                 openid: data.openid
             }
         })
-        // 若用户不存在则需要自动注册 - 将 openid 和 session_id 等用户信息存入数据库
+        // 若用户不存在 - 将 openid 和 session_key 等用户信息存入数据库
         if(!user) {
-            await this.prisma.user.create({
+            user = await this.prisma.user.create({
                 data: {
                     openid: data.openid,
                     session_key: data.session_key,
@@ -106,8 +87,8 @@ export class AuthService {
                 }
             })
         } 
-        // 若用户存在则更新 session_id
-        else {
+        // 若用户存在 - 判断是否需要更新 session_key
+        else if(user && user.session_key !== data.session_key){
             await this.prisma.user.update({
                 where: {
                     openid: data.openid
@@ -117,5 +98,6 @@ export class AuthService {
                 }
             })
         }
+        return user
     } 
 }
