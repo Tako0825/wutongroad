@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { LoginDTO } from './dto/login.dto';
 import { JwtService } from '@nestjs/jwt';
 import { PrismaService } from 'src/prisma/prisma.service';
@@ -54,8 +54,10 @@ export class AuthService {
         }
         // 调用微信开放接口 - 小程序登录返回 openid & session_key
         const data = await this.wechatApi.get(url, params)
+
         // 根据 openid 获取用户信息
         const user = await this.getUserInfo(data)
+        
         // 选择有需要的用户信息返回给前端
         const { openid, session_key, role, nickname } = user
         return {
@@ -87,7 +89,7 @@ export class AuthService {
         })
         // 若用户不存在 - 在数据库创建用户信息
         if(!user) {
-            user = await this.prisma.user.create({
+            return await this.prisma.user.create({
                 data: {
                     openid: data.openid,
                     session_key: data.session_key,
@@ -95,18 +97,24 @@ export class AuthService {
                     nickname: "uu"
                 }
             })
-        } 
+        }  
         // 若用户存在 - 判断是否需要在数据库中更新用户的 session_key
-        else if(user.session_key !== data.session_key){
-            await this.prisma.user.update({
-                where: {
-                    openid: data.openid
-                },
-                data: {
-                    session_key: data.session_key
-                }
-            })
+        else {
+            try {
+                const user = await this.prisma.user.update({
+                    where: {
+                        openid: data.openid
+                    },
+                    data: {
+                        session_key: data.session_key
+                    }
+                })
+                return user
+            }catch (error) {
+                throw new HttpException({
+                    
+                },HttpStatus.BAD_REQUEST)
+            }
         }
-        return user
     }
 }
