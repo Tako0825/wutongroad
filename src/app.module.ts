@@ -4,6 +4,7 @@ import { PrismaModule } from './prisma/prisma.module';
 import { JwtModule } from "@nestjs/jwt"
 import { JwtStrategy } from './common/jwt.strategy';
 import { WechatApiModule } from './wechat-api/wechat-api.module';
+import { QiniuModule } from './qiniu/qiniu.module';
 
 @Module({
   imports: [
@@ -20,6 +21,7 @@ import { WechatApiModule } from './wechat-api/wechat-api.module';
     AuthModule,
     PrismaModule,
     WechatApiModule,
+    QiniuModule,
   ],
   controllers: [],
   providers: [JwtStrategy],
