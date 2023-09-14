@@ -1,4 +1,4 @@
-import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 
 @Injectable()
 export class WechatApiService {
@@ -6,9 +6,10 @@ export class WechatApiService {
     // GET
     public async get(url:string, params: Record<string, any>, headers?: Record<string, any>) {
         // params => query 转化
-        const queryString = Object.keys(params)
-        .map(key => `${encodeURIComponent(key)}=${encodeURIComponent(params[key])}`)
-        .join('&');
+        const queryString = new URLSearchParams()
+        Object.keys(params).forEach(key => {
+            queryString.append(key, params[key])
+        })
         
         const response = await fetch(`${url}?${queryString}`,{
             method: "GET",
@@ -18,8 +19,12 @@ export class WechatApiService {
     }
 
     // POST
-    public async post(url:string, body: Record<string, any>) {
-        const response = await fetch(url, body)
+    public async post(url:string, body: Record<string, any>, headers?: Record<string, any>) {
+        const response = await fetch(url, {
+            method: "POST",
+            headers,
+            body: JSON.stringify(body)
+        })
         return await response.json()
     }
 }

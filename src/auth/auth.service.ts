@@ -18,7 +18,8 @@ export class AuthService {
     public async verify(user:UserModel) {
         const { openid, session_key, role, nickname } = user
         // 选择有需要的用户信息返回给前端
-        return {
+        const data = {
+            tip: "自动登录成功",
             userInfo: {
                 openid,
                 session_key,
@@ -26,12 +27,20 @@ export class AuthService {
                 nickname
             }
         }
+        // 服务器日志 - 用户自动登录
+        console.log(`${nickname}(${openid})-自动登录成功`);
+        return data
     }
 
     // 服务 - 登录
     public async login(body:LoginDTO) {
         const { js_code } = body
-        return this.WechatLogin(js_code)
+        const data = await this.WechatLogin(js_code) as any
+        const nickname = (data.userInfo as Partial<UserModel>).nickname
+        const openid = (data.userInfo as Partial<UserModel>).openid
+        // 服务器日志 - 用户登录
+        console.log(`${nickname}(${openid})-登录成功`);
+        return data
     }
 
     // 登录(1) - 小程序登录
@@ -76,7 +85,7 @@ export class AuthService {
                 openid: data.openid
             }
         })
-        // 若用户不存在 - 将 openid 和 session_key 等用户信息存入数据库
+        // 若用户不存在 - 在数据库创建用户信息
         if(!user) {
             user = await this.prisma.user.create({
                 data: {
@@ -87,8 +96,8 @@ export class AuthService {
                 }
             })
         } 
-        // 若用户存在 - 判断是否需要更新 session_key
-        else if(user && user.session_key !== data.session_key){
+        // 若用户存在 - 判断是否需要在数据库中更新用户的 session_key
+        else if(user.session_key !== data.session_key){
             await this.prisma.user.update({
                 where: {
                     openid: data.openid
@@ -99,5 +108,5 @@ export class AuthService {
             })
         }
         return user
-    } 
+    }
 }
