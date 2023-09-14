@@ -8,10 +8,11 @@ datasource db {
 }
 
 model user {
-  openid      String  @id
-  session_key String
-  role        String?
+  uuid        String  @id
   nickname    String
+  role        String
+  openid      String  @unique
+  session_key String
 }
 
 model category {

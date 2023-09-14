@@ -10,7 +10,6 @@ export class WechatApiService {
         Object.keys(params).forEach(key => {
             queryString.append(key, params[key])
         })
-        
         const response:Record<string, any> = await fetch(`${url}?${queryString}`,{
             method: "GET",
             headers
