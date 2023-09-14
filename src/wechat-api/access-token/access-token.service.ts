@@ -20,11 +20,11 @@ export class AccessTokenService {
         const { access_token, expires_in } = data
         this.access_token = access_token
         this.expires_in = expires_in * 1000
-        console.log(data);
+        console.log("微信接口调用凭据: ", data);
         // 每隔 2 小时更新一次 access_token
-        // setInterval(() => {
-        //     this.updateAcessToken()
-        // }, this.expires_in)
+        setInterval(() => {
+            this.updateAcessToken()
+        }, this.expires_in)
     }
 
     // 获取 access_token
@@ -47,6 +47,7 @@ export class AccessTokenService {
             const { access_token, expires_in } = await this.getAccessToken()
             this.access_token = access_token
             this.expires_in = expires_in * 1000
+            console.log("微信接口调用凭据 access_token 更新: ", access_token);
         }, this.expires_in)
     }
 }
