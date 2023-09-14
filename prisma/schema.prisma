@@ -8,23 +8,29 @@ datasource db {
 }
 
 model user {
-  uuid        String  @id
+  uuid        String    @id
   nickname    String
   role        String
-  openid      String  @unique
+  openid      String    @unique
   session_key String
+  create_time  DateTime
+  article     article[]
 }
 
 model category {
-  id      Int       @id @default(autoincrement()) @db.UnsignedInt
-  title   String
-  article article[]
+  uuid        String    @id
+  title       String
+  description String
+  article     article[]
 }
 
 model article {
-  id         Int      @id @default(autoincrement()) @db.UnsignedInt
+  uuid       String   @id
   title      String
   content    String   @db.Text
-  category   category @relation(fields: [categoryId], references: [id])
-  categoryId Int      @db.UnsignedInt
+  create_time DateTime
+  category   category @relation(fields: [category_id], references: [uuid])
+  category_id String   @unique
+  user       user     @relation(fields: [user_id], references: [uuid])
+  user_id     String   @unique
 }
