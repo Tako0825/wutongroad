@@ -99,7 +99,7 @@ export class AuthService {
                     role: "user",
                     openid: data.openid,
                     session_key: data.session_key,
-                    create_time: Random.date("yyyy-MM-dd")
+                    create_time: Random.date("yyyy-MM-dd"),
                 }
             })
         }  
