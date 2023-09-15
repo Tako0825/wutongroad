@@ -1,8 +1,8 @@
-import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { LoginDTO } from './dto/login.dto';
 import { JwtService } from '@nestjs/jwt';
 import { PrismaService } from 'src/prisma/prisma.service';
-import { UserModel } from './model/user.model';
+import { User } from './entities/user.entities';
 import { WechatApiService } from 'src/wechat-api/wechat-api.service';
 import { WechatApiUrl } from 'src/enum/WechatApiUrl';
 import { v4 } from "uuid"
@@ -17,7 +17,7 @@ export class AuthService {
     ) {}
 
     // 服务 - 自动登录
-    public async verify(user:UserModel) {
+    public async verify(user:User) {
         // 选择有需要的用户信息返回给前端
         const { uuid, nickname, role } = user
         // 服务器日志 - 用户自动登录
@@ -37,7 +37,7 @@ export class AuthService {
         const { js_code } = body
         // 调用微信开放接口 - 小程序登录
         const data = await this.WechatLogin(js_code) as any
-        const user:UserModel = data.user
+        const user:User = data.user
         const token:string = data.token
         // 选择有需要的用户信息返回给前端
         const { uuid, nickname, role } = user

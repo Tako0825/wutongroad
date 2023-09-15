@@ -3,7 +3,7 @@ import { AuthService } from './auth.service';
 import { Validation } from 'src/common/validation';
 import { LoginDTO } from './dto/login.dto';
 import { AuthGuard } from '@nestjs/passport';
-import { UserModel } from './model/user.model';
+import { User } from './entities/user.entities';
 
 @Controller('auth')
 export class AuthController {
@@ -22,7 +22,7 @@ export class AuthController {
   @UseGuards(AuthGuard("jwt"))
   verify(@Req() req:any) {
     // 根据 token 获取的当前用户 req.user
-    const user:UserModel = req.user
+    const user:User = req.user
     return this.authService.verify(user)
   }
 }
