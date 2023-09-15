@@ -6,6 +6,7 @@ import { UserModel } from './model/user.model';
 import { WechatApiService } from 'src/wechat-api/wechat-api.service';
 import { WechatApiUrl } from 'src/enum/WechatApiUrl';
 import { v4 } from "uuid"
+import { Random } from 'mockjs';
  
 @Injectable()
 export class AuthService {
@@ -97,7 +98,8 @@ export class AuthService {
                     nickname: "uu",
                     role: "user",
                     openid: data.openid,
-                    session_key: data.session_key
+                    session_key: data.session_key,
+                    create_time: Random.date("yyyy-MM-dd")
                 }
             })
         }  

@@ -28,6 +28,7 @@
     "@nestjs/passport": "^10.0.2",
     "@nestjs/platform-express": "^10.0.0",
     "@prisma/client": "5.2.0",
+    "@types/mockjs": "^1.0.7",
     "@types/passport-jwt": "^3.0.9",
     "@types/uuid": "^9.0.3",
     "argon2": "^0.31.1",

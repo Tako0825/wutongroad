@@ -7,30 +7,34 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+// 用户
 model user {
-  uuid        String    @id
-  nickname    String
-  role        String
-  openid      String    @unique
+  uuid        String  @id @default(uuid()) // uuid
+  nickname    String // 昵称
+  role        String // 角色
+  create_time String // 创建时间
+  avatar      String? // 头像
+  topics      topic[] // 话题
+  openid      String  @unique
   session_key String
-  create_time  DateTime
-  article     article[]
 }
 
+// 话题分类
 model category {
-  uuid        String    @id
-  title       String
-  description String
-  article     article[]
+  uuid        String  @id @default(uuid()) // uuid
+  title       String // 标题
+  description String  @db.Text // 描述
+  topics      topic[] // 话题
 }
 
-model article {
-  uuid       String   @id
-  title      String
-  content    String   @db.Text
-  create_time DateTime
-  category   category @relation(fields: [category_id], references: [uuid])
-  category_id String   @unique
-  user       user     @relation(fields: [user_id], references: [uuid])
-  user_id     String   @unique
+// 话题
+model topic {
+  uuid        String   @id @default(uuid()) // uuid
+  title       String // 标题
+  content     String   @db.Text // 内容
+  create_time String // 创建时间
+  category    category @relation(fields: [category_id], references: [uuid])
+  user        user     @relation(fields: [user_id], references: [uuid])
+  category_id String
+  user_id     String
 }
