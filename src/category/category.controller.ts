@@ -1,35 +1,42 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, UsePipes } from '@nestjs/common';
 import { CategoryService } from './category.service';
 import { CreateCategoryDto } from './dto/create-category.dto';
-import { UpdateCategoryDto } from './dto/update-category.dto';
+import { UpdateDescriptionDto } from './dto/update-description.dto';
+import { Validation } from 'src/common/validation';
 
 @Controller('category')
 export class CategoryController {
   constructor(private readonly categoryService: CategoryService) {}
 
+  // 接口 - 新建话题分类
   @Post()
+  @UsePipes(Validation)
   create(@Body() createCategoryDto: CreateCategoryDto) {
     return this.categoryService.create(createCategoryDto);
   }
 
-  // 查询所有 - 话题分类
+  // 接口 - 获取所有话题分类
   @Get()
   findAll() {
     return this.categoryService.findAll();
   }
 
-  @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.categoryService.findOne(+id);
+  // 接口 - 获取指定话题分类
+  @Get(':uuid')
+  findOne(@Param('uuid') uuid: string) {
+    return this.categoryService.findOne(uuid);
   }
 
-  @Patch(':id')
-  update(@Param('id') id: string, @Body() updateCategoryDto: UpdateCategoryDto) {
-    return this.categoryService.update(+id, updateCategoryDto);
+  // 接口 - 修改话题分类描述
+  @Patch(':uuid')
+  @UsePipes(Validation)
+  updateDescription(@Param('uuid') uuid: string, @Body() updateDescriptionDto: UpdateDescriptionDto) {
+    return this.categoryService.updateDescription(uuid, updateDescriptionDto);
   }
 
-  @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.categoryService.remove(+id);
+  // 接口 - 删除指定话题分类
+  @Delete(':uuid')
+  remove(@Param('uuid') uuid: string) {
+    return this.categoryService.remove(uuid);
   }
 }

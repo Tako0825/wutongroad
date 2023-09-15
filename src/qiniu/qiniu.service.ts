@@ -21,7 +21,7 @@ export class QiniuService {
         zone: zone.Zone_z2
     })
 
-    // 获取七牛云上传 token
+    // 服务 - 获取七牛云上传 token
     getUploadToken() {
         const putPolicy = new rs.PutPolicy(this.options)
         return {

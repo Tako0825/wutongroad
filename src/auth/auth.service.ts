@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { LoginDTO } from './dto/login.dto';
+import { LoginDto } from './dto/login.dto';
 import { JwtService } from '@nestjs/jwt';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { User } from './entities/user.entities';
@@ -33,7 +33,7 @@ export class AuthService {
     }
 
     // 服务 - 登录
-    public async login(body:LoginDTO) {
+    public async login(body:LoginDto) {
         const { js_code } = body
         // 调用微信开放接口 - 小程序登录
         const data = await this.WechatLogin(js_code) as any
