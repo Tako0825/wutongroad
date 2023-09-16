@@ -19,7 +19,7 @@
 
 ## Description
 
-[Nest](https://github.com/nestjs/nest) 框架 TypeScript 入门存储库。
+Nest.js + Typescript + Prisma + Mock.js
 
 ## Installation
 
@@ -33,17 +33,6 @@ $ pnpm install
 # watch mode
 $ pnpm dev
 ```
-
-
-## Support
-
-Nest是麻省理工学院授权的开源项目。多亏了赞助商和杰出支持者的支持，它才能发展壮大。如果你想加入他们，请在这里 [了解更多](https://docs.nestjs.com/support).
-
-## Stay in touch
-
-- Author - [Kamil Myśliwiec](https://kamilmysliwiec.com)
-- Website - [https://nestjs.com](https://nestjs.com/)
-- Twitter - [@nestframework](https://twitter.com/nestframework)
 
 ## License
 
