@@ -44,11 +44,6 @@ export class CategoryService {
   // 服务 - 修改话题分类描述
   async updateDescription(uuid: string, updateDescriptionDto: UpdateDescriptionDto) {
     const oldValue = await this.tryToFindCategory(uuid)
-    if(oldValue.description === updateDescriptionDto.description) {
-      return new HttpException({
-          tip: "话题描述不变, 无需作出修改"
-      }, HttpStatus.NOT_MODIFIED)
-    }
     const newValue = await this.prisma.category.update({
       where: {
         uuid
@@ -87,7 +82,7 @@ export class CategoryService {
     })
     if(!category) {
       throw new HttpException({
-        tip: "请提供有效的 uuid",
+        tip: "请提供有效的 uuid 以查询话题分类",
         meta: {
           uuid
         }

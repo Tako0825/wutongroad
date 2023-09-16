@@ -1,4 +1,4 @@
-import { CallHandler, ExecutionContext, Injectable, NestInterceptor } from '@nestjs/common';
+import { CallHandler, ExecutionContext, HttpException, HttpStatus, Injectable, NestInterceptor } from '@nestjs/common';
 import { Observable, map } from 'rxjs';
 import { HttpStatusCode } from 'src/enum/HttpStatusCode';
 
@@ -6,6 +6,11 @@ import { HttpStatusCode } from 'src/enum/HttpStatusCode';
 export class ResponseInterceptor implements NestInterceptor {
   intercept(context: ExecutionContext, next: CallHandler): Observable<any> {
     return next.handle().pipe(map(response => {
+      if(!response) {
+        throw new HttpException({
+          tip: "服务器提供了该接口但未处理响应内容, 请联系服务器开发者"
+        },HttpStatus.INTERNAL_SERVER_ERROR)
+      }
       // 响应拦截器
       return {
         code: response.status,
