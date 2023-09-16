@@ -2,9 +2,6 @@
   <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo-small.svg" width="200" alt="Nest Logo" /></a>
 </p>
 
-[circleci-image]: https://img.shields.io/circleci/build/github/nestjs/nest/master?token=abc123def456
-[circleci-url]: https://circleci.com/gh/nestjs/nest
-
   <p align="center">A progressive <a href="http://nodejs.org" target="_blank">Node.js</a> framework for building efficient and scalable server-side applications.</p>
     <p align="center">
 <a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/v/@nestjs/core.svg" alt="NPM Version" /></a>
@@ -24,7 +21,7 @@
 
 ## Description
 
-[Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
+[Nest](https://github.com/nestjs/nest) 框架 TypeScript 入门存储库。
 
 ## Installation
 
@@ -35,32 +32,14 @@ $ pnpm install
 ## Running the app
 
 ```bash
-# development
-$ pnpm run start
-
 # watch mode
-$ pnpm run start:dev
-
-# production mode
-$ pnpm run start:prod
+$ pnpm dev
 ```
 
-## Test
-
-```bash
-# unit tests
-$ pnpm run test
-
-# e2e tests
-$ pnpm run test:e2e
-
-# test coverage
-$ pnpm run test:cov
-```
 
 ## Support
 
-Nest is an MIT-licensed open source project. It can grow thanks to the sponsors and support by the amazing backers. If you'd like to join them, please [read more here](https://docs.nestjs.com/support).
+Nest是麻省理工学院授权的开源项目。多亏了赞助商和杰出支持者的支持，它才能发展壮大。如果你想加入他们，请在这里 [了解更多](https://docs.nestjs.com/support).
 
 ## Stay in touch
 
@@ -72,5 +51,5 @@ Nest is an MIT-licensed open source project. It can grow thanks to the sponsors 
 
 Nest is [MIT licensed](LICENSE).
 
-# wutongroad
-梧桐路校园墙是一个功能丰富的校园社交平台。提供了登录注册、鉴权和多个功能模块，包括新生专区、提问板、表白墙、失物认领和物品交易系统。
+# 简介
+梧桐路万能墙是一个超酷的校园社交平台！我们提供了新生专区、提问板、表白墙、失物认领和物品交易等功能，让你更好地适应校园生活、解决问题、表达心意、找回失物、以及优质物品报价。欢迎加入我们平台，一起感受校园氛围、玩转校园社交！
