@@ -16,11 +16,8 @@ export class HttpFilter implements ExceptionFilter {
     // 2.如果异常抛出时需要返回数据，请使用 meta 属性来表示数据信息
     response.status(status).json({
       code: status,
-      message: exception.message,
-      data: {
-        tip: HttpStatusCode[status],
-        meta: (exception.getResponse() as any).meta
-      }
+      message: HttpStatusCode[status],
+      data: exception.getResponse()
     })
   }
 }

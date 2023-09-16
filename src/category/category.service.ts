@@ -17,39 +17,37 @@ export class CategoryService {
         description: createCategoryDto.description
       }
     })
-    return {
+    return new HttpException({
       tip: "话题分类新建成功",
       category
-    };
+    }, HttpStatus.OK)
   }
 
   // 服务 - 获取所有话题分类
   async findAll() {
     const categorytList = await this.prisma.category.findMany()
-    return {
+    return new HttpException({
       tip: "成功获取所有的话题分类",
       categorytList
-    };
+    }, HttpStatus.OK)
   }
 
   // 服务 - 获取指定话题分类
   async findOne(uuid: string) {
     const category = await this.tryToFindCategory(uuid)
-    return {
+    return new HttpException({
       tip: "成功获取指定的话题分类",
       category
-    }
+    }, HttpStatus.OK)
   }
 
   // 服务 - 修改话题分类描述
   async updateDescription(uuid: string, updateDescriptionDto: UpdateDescriptionDto) {
     const oldValue = await this.tryToFindCategory(uuid)
     if(oldValue.description === updateDescriptionDto.description) {
-      return {
-        meta: {
-          message: "话题描述不变, 无需作出修改"
-        }
-      }
+      return new HttpException({
+          tip: "话题描述不变, 无需作出修改"
+      }, HttpStatus.NOT_MODIFIED)
     }
     const newValue = await this.prisma.category.update({
       where: {
@@ -59,11 +57,11 @@ export class CategoryService {
         description: updateDescriptionDto.description
       }
     })
-    return {
+    return new HttpException({
       tip: "成功修改话题分类",
       newValue,
       oldValue
-    }
+    }, HttpStatus.OK)
   }
 
   // 服务 - 删除指定话题分类
@@ -74,10 +72,10 @@ export class CategoryService {
         uuid
       }
     })
-    return {
+    return new HttpException({
       tip: "成功删除指定话题分类",
       category
-    }
+    }, HttpStatus.OK)
   }
 
   // 尝试根据 uuid 查询话题分类
@@ -89,10 +87,11 @@ export class CategoryService {
     })
     if(!category) {
       throw new HttpException({
+        tip: "请提供有效的 uuid",
         meta: {
           uuid
         }
-      }, HttpStatus.UNPROCESSABLE_ENTITY)
+      }, HttpStatus.NOT_FOUND)
     }
     return category
   }
