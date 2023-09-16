@@ -2,6 +2,7 @@ import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { CreateTopicDto } from './dto/create-topic.dto';
 import { UpdateTopicDto } from './dto/update-topic.dto';
 import { PrismaService } from 'src/prisma/prisma.service';
+import { Topic } from './entities/topic.entity';
 
 @Injectable()
 export class TopicService {
@@ -66,17 +67,7 @@ export class TopicService {
 
   // 服务 - 修改话题
   async update(uuid: string, updateTopicDto: UpdateTopicDto) {
-    const oldValue = await this.tryToFindTopic(uuid)
-    const newValue = await this.prisma.topic.update({
-      where: {
-        uuid
-      },
-      data: {
-        title: updateTopicDto.title,
-        content: updateTopicDto.content,
-        category_id: updateTopicDto.category_id
-      }
-    })
+    const { newValue, oldValue } = await this.tryToUpdateUser(uuid, updateTopicDto)
     return new HttpException({
       tip: "成功修改话题标题",
       newValue,
@@ -113,5 +104,27 @@ export class TopicService {
         }, HttpStatus.NOT_FOUND)
       }
       return entity
+  }
+
+  // 尝试对提交数据和数据库进行比对, 判断是否需要作出修改
+  async tryToUpdateUser(uuid: string, data:UpdateTopicDto) {
+    const oldValue = await this.tryToFindTopic(uuid)
+    for(let key in data) {
+      if(data[key] !== oldValue[key]){
+        const newValue:Topic = await this.prisma.topic.update({
+          where: {
+            uuid
+          },
+          data
+        })
+        return {
+          oldValue,
+          newValue
+        }
+      }
+    }
+    throw new HttpException({
+      tip: "数据经过比对, 无需作出修改"
+    }, HttpStatus.BAD_REQUEST)
   }
 }

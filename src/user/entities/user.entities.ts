@@ -4,7 +4,7 @@ export class User {
     role: string
     openid: string
     session_key: string
-    create_time: string
+    create_time: Date
     avatar: string
-    gender: string | unknown
+    gender: string | null
 }

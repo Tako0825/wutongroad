@@ -1,7 +1,7 @@
 import { Controller, Get, Post, Body, Patch, Param, Delete, UsePipes } from '@nestjs/common';
 import { CategoryService } from './category.service';
 import { CreateCategoryDto } from './dto/create-category.dto';
-import { UpdateDescriptionDto } from './dto/update-description.dto';
+import { UpdateCategoryDto } from './dto/update-category.dto';
 import { Validation } from 'src/common/validation';
 
 @Controller('category')
@@ -30,7 +30,7 @@ export class CategoryController {
   // 接口 - 修改话题分类描述
   @Patch(':uuid')
   @UsePipes(Validation)
-  updateDescription(@Param('uuid') uuid: string, @Body() updateDescriptionDto: UpdateDescriptionDto) {
+  updateDescription(@Param('uuid') uuid: string, @Body() updateDescriptionDto: UpdateCategoryDto) {
     return this.categoryService.updateDescription(uuid, updateDescriptionDto);
   }
 

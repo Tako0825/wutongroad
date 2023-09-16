@@ -7,6 +7,7 @@ import { WechatApiModule } from './wechat-api/wechat-api.module';
 import { QiniuModule } from './qiniu/qiniu.module';
 import { CategoryModule } from './category/category.module';
 import { TopicModule } from './topic/topic.module';
+import { UserModule } from './user/user.module';
 
 @Module({
   imports: [
@@ -26,6 +27,7 @@ import { TopicModule } from './topic/topic.module';
     QiniuModule,
     CategoryModule,
     TopicModule,
+    UserModule,
   ],
   controllers: [],
   providers: [JwtStrategy],

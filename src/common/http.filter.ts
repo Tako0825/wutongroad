@@ -17,7 +17,10 @@ export class HttpFilter implements ExceptionFilter {
     response.status(status).json({
       code: status,
       message: HttpStatusCode[status],
-      data: exception.getResponse()
+      data: {
+        tip: (exception.getResponse() as any).tip,
+        meta: (exception.getResponse() as any).meta
+      }
     })
   }
 }

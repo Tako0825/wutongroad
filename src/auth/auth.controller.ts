@@ -3,7 +3,7 @@ import { AuthService } from './auth.service';
 import { Validation } from 'src/common/validation';
 import { LoginDto } from './dto/login.dto';
 import { AuthGuard } from '@nestjs/passport';
-import { User } from './entities/user.entities';
+import { User } from '../user/entities/user.entities';
 
 @Controller('auth')
 export class AuthController {

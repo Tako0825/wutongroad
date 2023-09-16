@@ -1,7 +1,8 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { CreateCategoryDto } from './dto/create-category.dto';
-import { UpdateDescriptionDto } from './dto/update-description.dto';
+import { UpdateCategoryDto } from './dto/update-category.dto';
 import { PrismaService } from 'src/prisma/prisma.service';
+import { Category } from './entities/category.entity';
 
 @Injectable()
 export class CategoryService {
@@ -42,16 +43,8 @@ export class CategoryService {
   }
 
   // 服务 - 修改话题分类描述
-  async updateDescription(uuid: string, updateDescriptionDto: UpdateDescriptionDto) {
-    const oldValue = await this.tryToFindCategory(uuid)
-    const newValue = await this.prisma.category.update({
-      where: {
-        uuid
-      },
-      data: {
-        description: updateDescriptionDto.description
-      }
-    })
+  async updateDescription(uuid: string, updateDescriptionDto: UpdateCategoryDto) {
+    const { newValue, oldValue } = await this.tryToUpdateCategory(uuid, updateDescriptionDto)
     return new HttpException({
       tip: "成功修改话题分类",
       newValue,
@@ -89,5 +82,27 @@ export class CategoryService {
       }, HttpStatus.NOT_FOUND)
     }
     return category
+  }
+
+  // 尝试对提交数据和数据库进行比对, 判断是否需要作出修改
+  async tryToUpdateCategory(uuid: string, data:UpdateCategoryDto) {
+    const oldValue = await this.tryToFindCategory(uuid)
+    for(let key in data) {
+      if(data[key] !== oldValue[key]){
+        const newValue:Category = await this.prisma.category.update({
+          where: {
+            uuid
+          },
+          data
+        })
+        return {
+          oldValue,
+          newValue
+        }
+      }
+    }
+    throw new HttpException({
+      tip: "数据经过比对, 无需作出修改"
+    }, HttpStatus.BAD_REQUEST)
   }
 }

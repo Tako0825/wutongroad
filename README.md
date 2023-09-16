@@ -16,8 +16,6 @@
     <a href="https://opencollective.com/nest#sponsor"  target="_blank"><img src="https://img.shields.io/badge/Support%20us-Open%20Collective-41B883.svg" alt="Support us"></a>
   <a href="https://twitter.com/nestframework" target="_blank"><img src="https://img.shields.io/twitter/follow/nestframework.svg?style=social&label=Follow"></a>
 </p>
-  <!--[![Backers on Open Collective](https://opencollective.com/nest/backers/badge.svg)](https://opencollective.com/nest#backer)
-  [![Sponsors on Open Collective](https://opencollective.com/nest/sponsors/badge.svg)](https://opencollective.com/nest#sponsor)-->
 
 ## Description
 
@@ -52,4 +50,4 @@ Nest是麻省理工学院授权的开源项目。多亏了赞助商和杰出支�
 Nest is [MIT licensed](LICENSE).
 
 # 简介
-梧桐路万能墙是一个超酷的校园社交平台！我们提供了新生专区、提问板、表白墙、失物认领和物品交易等功能，让你更好地适应校园生活、解决问题、表达心意、找回失物、以及优质物品报价。欢迎加入我们平台，一起感受校园氛围、玩转校园社交！
+梧桐路万能墙是一个超酷的校园社交平台！我们提供了新生专区、提问板、表白墙、失物认领和物品交易等功能，让你更好地适应校园生活、解决问题、表达心意、找回失物、交易闲置用品等。欢迎加入我们平台，一起感受校园氛围、玩转校园社交！

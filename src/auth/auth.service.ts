@@ -1,8 +1,8 @@
-import { Injectable } from '@nestjs/common';
+import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { LoginDto } from './dto/login.dto';
 import { JwtService } from '@nestjs/jwt';
 import { PrismaService } from 'src/prisma/prisma.service';
-import { User } from './entities/user.entities';
+import { User } from '../user/entities/user.entities';
 import { WechatApiService } from 'src/wechat-api/wechat-api.service';
 import { WechatApiUrl } from 'src/enum/WechatApiUrl';
 import { v4 } from "uuid"
@@ -22,14 +22,14 @@ export class AuthService {
         const { uuid, nickname, role } = user
         // 服务器日志 - 用户自动登录
         console.log(`${nickname}(${uuid})-自动登录成功`);
-        return {
+        return new HttpException({
             tip: "自动登录成功",
             userInfo: {
                 uuid,
                 role,
                 nickname
             }
-        }
+        },HttpStatus.OK)
     }
 
     // 服务 - 登录
@@ -43,7 +43,7 @@ export class AuthService {
         const { uuid, nickname, role } = user
         // 服务器日志 - 用户登录
         console.log(`${nickname}(${uuid})-登录成功`);
-        return {
+        return new HttpException({
             tip: "登录成功",
             userInfo: {
                 uuid,
@@ -51,7 +51,7 @@ export class AuthService {
                 role
             },
             token
-        }
+        }, HttpStatus.OK)
     }
 
     // 登录(1) - 调用微信开放接口 - 小程序登录

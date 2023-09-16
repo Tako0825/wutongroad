@@ -21,7 +21,7 @@ export class JwtStrategy extends PassportStrategy(Strategy,"jwt") {
                 openid: openid
             }
         });
-    
+        
         // 返回验证后的用户信息
         return user;
     }

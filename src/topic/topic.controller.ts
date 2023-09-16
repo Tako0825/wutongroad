@@ -42,7 +42,7 @@ export class TopicController {
   }
 
   // 接口 - 修改话题
-  @Patch('/:uuid')
+  @Patch(':uuid')
   @UsePipes(Validation)
   updateTitle(@Param('uuid') uuid: string, @Body() updateTopicDto: UpdateTopicDto) {
     return this.topicService.update(uuid, updateTopicDto);

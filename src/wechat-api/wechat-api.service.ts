@@ -17,10 +17,11 @@ export class WechatApiService {
         const data = await response.json()
         if(data.errcode) {
             throw new HttpException({
+                tip: "请认真查阅微信开发文档, 提供有效的参数",
                 meta: {
                     error: data.errmsg
                 }
-            },HttpStatus.BAD_REQUEST)
+            },HttpStatus.UNPROCESSABLE_ENTITY)
         }
         return data
     }
@@ -35,10 +36,11 @@ export class WechatApiService {
         const data = await response.json()
         if(data.errcode) {
             throw new HttpException({
+                tip: "请认真查阅微信开发文档, 提供有效的参数",
                 meta: {
                     error: data.errmsg
                 }
-            },HttpStatus.BAD_REQUEST)
+            },HttpStatus.UNPROCESSABLE_ENTITY)
         }
         return data
     }
