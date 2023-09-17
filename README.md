@@ -1,7 +1,6 @@
-<p align="center">
+<p align="center" style="padding: 2rem 0;">
   <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo-small.svg" width="200" alt="Nest Logo" /></a>
 </p>
-
   <p align="center">A progressive <a href="http://nodejs.org" target="_blank">Node.js</a> framework for building efficient and scalable server-side applications.</p>
     <p align="center">
 <a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/v/@nestjs/core.svg" alt="NPM Version" /></a>
@@ -27,16 +26,21 @@ Nest.js + Typescript + Prisma + Mock.js
 $ pnpm install
 ```
 
+## Database migration
+```bash
+# 确保你所提供的数据库配置项准确
+$ npx prisma generate
+
+# 数据库迁徙
+$ npx prisma migrate dev
+```
+
 ## Running the app
 
 ```bash
-# watch mode
+# watch mode (监视模式下, 开发者可以更轻松地进行开发和调试)
 $ pnpm dev
 ```
 
-## License
-
-Nest is [MIT licensed](LICENSE).
-
-# 简介
-梧桐路万能墙是一个超酷的校园社交平台！我们提供了新生专区、提问板、表白墙、失物认领和物品交易等功能，让你更好地适应校园生活、解决问题、表达心意、找回失物、交易闲置用品等。欢迎加入我们平台，一起感受校园氛围、玩转校园社交！
+### 简介
+欢迎访问梧桐路万能墙！在这里，你能感受校园氛围、玩转校园社交！

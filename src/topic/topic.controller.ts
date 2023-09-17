@@ -22,23 +22,37 @@ export class TopicController {
     return this.topicService.getTotal()
   }
 
-  // 接口 - 获取所有话题 / 获取指定页所有话题
+  // 接口 - 获取所有话题
   @Get()
+  findAll() {
+    return this.topicService.findAll()
+  }
+
+  // 接口 - 获取指定页所有话题 
+  @Get("/page")
   @UsePipes(Validation)
-  findMany(@Query() pageDto:PageDto) {
-    const { currentPage, pageSize } = pageDto
-    // 所有
-    if(!currentPage && !pageSize)
-      return this.topicService.findAll();
-    // 指定页
-    else
-      return this.topicService.findPage(+currentPage, +pageSize)
+  findPage(@Query() pageDto:PageDto) {
+    // 默认每页 10 条话题, 从第 1 页开始查询
+    const { pageSize = 10, currentPage = 1 } = pageDto
+    return this.topicService.findPage(+pageSize, +currentPage)
   }
 
   // 接口 - 获取指定话题
   @Get(':uuid')
   findOne(@Param('uuid') uuid: string) {
-    return this.topicService.findOne(uuid);
+  return this.topicService.findOne(uuid);
+  }
+
+  // 接口 - 获取指定用户话题 
+  @Get("/user/:uuid")
+  findUserTopic(@Param('uuid') uuid: string) {
+    return this.topicService.findUserTopic(uuid)
+  }
+
+  // 接口 - 获取指定分类话题
+  @Get("/category/:uuid")
+  findCategoryTopic(@Param('uuid') uuid: string) {
+    return this.topicService.findCategoryTopic(uuid)
   }
 
   // 接口 - 修改话题
