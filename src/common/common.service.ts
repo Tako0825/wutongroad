@@ -65,6 +65,24 @@ export class CommonService {
         return entity
     }
 
+    // 尝试查询评论
+    async tryToFindComment(uuid: string) {
+        const entity = await this.prisma.comment.findUnique({
+            where: {
+                uuid
+            }
+        })
+        if(!entity) {
+            throw new HttpException({
+            tip: `请提供有效的 uuid 以查询评论`,
+            meta: {
+                uuid
+            }
+            }, HttpStatus.NOT_FOUND)
+        }
+        return entity
+    }
+
     // 尝试修改用户信息
     async tryToUpdateUser(uuid: string, data:UpdateUserDto) {
         const oldValue = await this.tryToFindUser(uuid)
