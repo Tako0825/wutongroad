@@ -30,8 +30,8 @@ export class CategoryController {
   // 接口 - 修改话题分类描述
   @Patch(':uuid')
   @UsePipes(Validation)
-  updateDescription(@Param('uuid') uuid: string, @Body() updateDescriptionDto: UpdateCategoryDto) {
-    return this.categoryService.updateDescription(uuid, updateDescriptionDto);
+  UpdateCategoryDto(@Param('uuid') uuid: string, @Body() updateCategoryDto: UpdateCategoryDto) {
+    return this.categoryService.updateCategory(uuid, updateCategoryDto);
   }
 
   // 接口 - 删除指定话题分类

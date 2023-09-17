@@ -8,6 +8,7 @@ import { QiniuModule } from './qiniu/qiniu.module';
 import { CategoryModule } from './category/category.module';
 import { TopicModule } from './topic/topic.module';
 import { UserModule } from './user/user.module';
+import { CommonModule } from './common/common.module';
 
 @Module({
   imports: [
@@ -28,6 +29,7 @@ import { UserModule } from './user/user.module';
     CategoryModule,
     TopicModule,
     UserModule,
+    CommonModule,
   ],
   controllers: [],
   providers: [JwtStrategy],
