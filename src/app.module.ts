@@ -9,6 +9,7 @@ import { CategoryModule } from './category/category.module';
 import { TopicModule } from './topic/topic.module';
 import { UserModule } from './user/user.module';
 import { CommonModule } from './common/common.module';
+import { CommentModule } from './comment/comment.module';
 
 @Module({
   imports: [
@@ -30,6 +31,7 @@ import { CommonModule } from './common/common.module';
     TopicModule,
     UserModule,
     CommonModule,
+    CommentModule,
   ],
   controllers: [],
   providers: [JwtStrategy],

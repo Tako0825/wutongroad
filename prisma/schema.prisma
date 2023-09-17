@@ -34,7 +34,21 @@ model Topic {
   create_time DateTime @default(now()) // 创建时间
   category_id String // 所属分类uuid
   user_id     String // 作者uuid
+  Comments    Int @default(0)// 评论数
 
   @@index([user_id])
   @@index([category_id])
+}
+
+// 评论
+model Comment {
+  uuid        String   @id @default(uuid()) // uuid
+  content     String   @db.Text // 内容
+  create_time DateTime @default(now()) // 创建时间
+  user_id     String // 用户 uuid
+  topic_id    String // 所属话题 uuid
+  parent_id   String? // 父评论 uuid
+
+  @@index([user_id])
+  @@index([topic_id])
 }

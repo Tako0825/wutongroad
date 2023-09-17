@@ -12,7 +12,7 @@ async function bootstrap() {
   // 响应拦截器
   app.useGlobalInterceptors(new ResponseInterceptor())
 
-  // 异常拦截器
+  // 异常过滤器
   app.useGlobalFilters(new HttpFilter())
 
   // 监听端口 - 3000

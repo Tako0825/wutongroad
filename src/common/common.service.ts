@@ -33,15 +33,15 @@ export class CommonService {
     async tryToFindUser(uuid: string) {
         const entity = await this.prisma.user.findUnique({
             where: {
-            uuid
+                uuid
             }
         })
         if(!entity) {
             throw new HttpException({
-            tip: `请提供有效的 uuid 以查询用户`,
-            meta: {
-                uuid
-            }
+                tip: `请提供有效的 uuid 以查询用户`,
+                meta: {
+                    uuid
+                }
             }, HttpStatus.NOT_FOUND)
         }
         return entity

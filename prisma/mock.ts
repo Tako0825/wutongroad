@@ -4,22 +4,29 @@ import { Random } from "mockjs";
 async function main() {
     const prisma = new PrismaClient()
 
-    const users = await prisma.user.findMany()
-    const uuidRandom_user = users[Random.integer(0,users.length-1)].uuid
+    const userList = await prisma.user.findMany()
+    const uuidRandom_user = userList[Random.integer(0,userList.length-1)].uuid
 
-    const categories = await prisma.category.findMany()
-    const uuidRandom_category = categories[Random.integer(0,categories.length-1)].uuid
+    const categoryList = await prisma.category.findMany()
+    const uuidRandom_category = categoryList[Random.integer(0,categoryList.length-1)].uuid
 
-    await prisma.topic.create({
+    const topicList = await prisma.topic.findMany()
+    const uuidRandom_topic = topicList[Random.integer(0,topicList.length-1)].uuid
+
+    const commentsList = await prisma.comment.findMany()
+    const uuidRandom_comment = commentsList[Random.integer(0,commentsList.length-1)].uuid
+
+
+    // 在这里造数据
+    await prisma.comment.create({
         data: {
             content: Random.cparagraph(10),
-            title: Random.ctitle(2,4),
-            category_id: uuidRandom_category,
-            user_id: uuidRandom_user
+            user_id: uuidRandom_user,
+            topic_id: uuidRandom_topic,
         }
     })
 }
 
-for(let i=0; i<5; i++) {
+for(let i=0; i<10; i++) {
     main()
 }

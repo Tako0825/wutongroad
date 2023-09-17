@@ -13,6 +13,7 @@ export class TopicService {
 
   // 服务 - 新建话题
   async create(createTopicDto: CreateTopicDto) {
+    // 操作数据库
     const topic = await this.prisma.topic.create({
       data: {
         title: createTopicDto.title,
@@ -21,10 +22,11 @@ export class TopicService {
         user_id: createTopicDto.user_id
       }
     })
+    // 响应信息
     return new HttpException({
       tip: "成功新建话题",
       topic
-    },HttpStatus.OK)
+    }, HttpStatus.OK)
   }
 
   // 服务 - 获取话题总数
