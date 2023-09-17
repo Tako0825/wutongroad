@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { auth, conf, rs, zone } from 'qiniu';
 
 @Injectable()
@@ -24,9 +24,9 @@ export class QiniuService {
     // 服务 - 获取七牛云上传 token
     getUploadToken() {
         const putPolicy = new rs.PutPolicy(this.options)
-        return {
+        return new HttpException({
             tip: "成功获取七牛云上传凭据",
             uploadToken: putPolicy.uploadToken(this.mac)
-        }
+        }, HttpStatus.OK)
     }
 }
