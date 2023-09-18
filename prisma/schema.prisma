@@ -55,18 +55,18 @@ model Comment {
   @@index([topic_id])
 }
 
+// 消息通知
+model Notice {
+  uuid         String @id @default(uuid()) // uuid
+  type         NoticeType // 类型
+  content      String? @db.Text // 内容
+  sender_id    String? // 寄件人 uuid
+  recipient_id String // 收件人 uuid
+}
+
 // 消息通知类型
 enum NoticeType {
   system // 系统通知
   admin // 管理员通知
   comment // 评论通知
-}
-
-// 消息通知
-model Notice {
-  uuid         String @id @default(uuid()) // uuid
-  type         NoticeType? // 类型
-  content      String @db.Text // 内容
-  sender_id    String? // 寄件人 uuid
-  recipient_id String // 收件人 uuid
 }
