@@ -36,9 +36,30 @@ export class CommentService {
     }, HttpStatus.OK)
   }
 
-  // 服务 - 获取指定页所有评论
+  // 服务 - 获取指定页所有评论 - 已审核
   async findPage(pageSize: number, currentPage: number) {
     const commentList = await this.prisma.comment.findMany({
+      where: {
+        is_approved: true
+      },
+      skip: (currentPage - 1) * pageSize,
+      take: pageSize
+    })
+    const count = commentList.length
+    return new HttpException({
+      tip: `成功获取第${currentPage}页, 共${count}条评论`,
+      currentPage,
+      count,
+      commentList
+    },HttpStatus.OK)
+  }
+
+  // 服务 - 获取指定页所有评论 - 未审核
+  async findPendingApproval(pageSize: number, currentPage: number) {
+    const commentList = await this.prisma.comment.findMany({
+      where: {
+        is_approved: false
+      },
       skip: (currentPage - 1) * pageSize,
       take: pageSize
     })

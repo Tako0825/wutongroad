@@ -37,18 +37,30 @@ export class TopicService {
     }, HttpStatus.OK)
   }
 
-  // 服务 - 获取所有话题
-  async findAll() {
-    const topicList = await this.prisma.topic.findMany()
+  // 服务 - 获取指定页所有话题 - 已审核
+  async findPage(pageSize: number, currentPage: number) {
+    const topicList = await this.prisma.topic.findMany({
+      where: {
+        is_approved: true
+      },
+      skip: (currentPage - 1) * pageSize,
+      take: pageSize
+    })
+    const count = topicList.length
     return new HttpException({
-      tip: "成功获取所有话题",
+      tip: `成功获取第${currentPage}页, 共${count}条话题`,
+      currentPage,
+      count,
       topicList
     },HttpStatus.OK)
   }
 
-  // 服务 - 获取指定页所有话题
-  async findPage(pageSize: number, currentPage: number) {
+  // 服务 - 获取指定页所有话题 - 待审核
+  async findPendingApproval(pageSize: number, currentPage: number) {
     const topicList = await this.prisma.topic.findMany({
+      where: {
+        is_approved: false
+      },
       skip: (currentPage - 1) * pageSize,
       take: pageSize
     })

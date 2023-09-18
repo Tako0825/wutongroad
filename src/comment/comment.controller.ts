@@ -21,10 +21,19 @@ export class CommentController {
     return this.commentService.getTotal()
   }
 
-  // 接口 - 获取指定页所有评论
-  @Get("/page")
+  // 接口 - 获取指定页所有评论 - 已审核
+  @Get("/approved/page")
   @UsePipes(Validation)
   findPage(@Query() pageDto:PageDto) {
+    // 默认每页 10 条话题, 从第 1 页开始查询
+    const { pageSize = 10, currentPage = 1 } = pageDto
+    return this.commentService.findPage(+pageSize, +currentPage)
+  }
+
+  // 接口 - 获取指定页所有评论 - 未审核
+  @Get("/pending-approval/page")
+  @UsePipes(Validation)
+  findPendingApproval(@Query() pageDto:PageDto) {
     // 默认每页 10 条话题, 从第 1 页开始查询
     const { pageSize = 10, currentPage = 1 } = pageDto
     return this.commentService.findPage(+pageSize, +currentPage)

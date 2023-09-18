@@ -34,7 +34,7 @@ model Topic {
   create_time DateTime @default(now()) // 创建时间
   category_id String // 所属分类uuid
   user_id     String // 作者uuid
-  Comments    Int      @default(0) // 评论数
+  comments    Int      @default(0) // 评论数
   is_approved Boolean  @default(false)
 
   @@index([user_id])
@@ -49,7 +49,24 @@ model Comment {
   user_id     String // 用户 uuid
   topic_id    String // 所属话题 uuid
   parent_id   String? // 父评论 uuid
+  is_approved Boolean  @default(false)
 
   @@index([user_id])
   @@index([topic_id])
+}
+
+// 消息通知类型
+enum NoticeType {
+  system // 系统通知
+  admin // 管理员通知
+  comment // 评论通知
+}
+
+// 消息通知
+model Notice {
+  uuid         String @id @default(uuid()) // uuid
+  type         NoticeType? // 类型
+  content      String @db.Text // 内容
+  sender_id    String? // 寄件人 uuid
+  recipient_id String // 收件人 uuid
 }

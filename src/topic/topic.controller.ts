@@ -22,19 +22,23 @@ export class TopicController {
     return this.topicService.getTotal()
   }
 
-  // 接口 - 获取所有话题
-  @Get()
-  findAll() {
-    return this.topicService.findAll()
-  }
-
-  // 接口 - 获取指定页所有话题 
-  @Get("/page")
+  // 接口 - 获取指定页所有话题 - 已审核
+  @Get("/approved/page")
   @UsePipes(Validation)
   findPage(@Query() pageDto:PageDto) {
     // 默认每页 10 条话题, 从第 1 页开始查询
     const { pageSize = 10, currentPage = 1 } = pageDto
     return this.topicService.findPage(+pageSize, +currentPage)
+  }
+
+  // 接口 - 获取指定页所有话题 - 待审核
+  @Get("/pending-approval/page")
+  @UsePipes(Validation)
+  findPendingApproval(@Query() pageDto:PageDto) {
+    console.log(":2313221");
+    // 默认每页 10 条话题, 从第 1 页开始查询
+    const { pageSize = 10, currentPage = 1 } = pageDto
+    return this.topicService.findPendingApproval(+pageSize, +currentPage)
   }
 
   // 接口 - 获取指定话题

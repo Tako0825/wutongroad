@@ -16,17 +16,17 @@ async function main() {
     const commentsList = await prisma.comment.findMany()
     const uuidRandom_comment = commentsList[Random.integer(0,commentsList.length-1)].uuid
 
-
     // 在这里造数据
     await prisma.comment.create({
         data: {
-            content: Random.cparagraph(10),
             user_id: uuidRandom_user,
             topic_id: uuidRandom_topic,
+            content: Random.cparagraph(10,20),
+            is_approved: true,
         }
     })
 }
 
-for(let i=0; i<10; i++) {
+for(let i=0; i<15; i++) {
     main()
 }
