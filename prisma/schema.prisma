@@ -34,7 +34,8 @@ model Topic {
   create_time DateTime @default(now()) // 创建时间
   category_id String // 所属分类uuid
   user_id     String // 作者uuid
-  Comments    Int @default(0)// 评论数
+  Comments    Int      @default(0) // 评论数
+  is_approved Boolean  @default(false)
 
   @@index([user_id])
   @@index([category_id])
