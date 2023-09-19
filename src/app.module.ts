@@ -1,9 +1,9 @@
 import { Module } from '@nestjs/common';
 import { AuthModule } from './auth/auth.module';
-import { PrismaModule } from './prisma/prisma.module';
+import { PrismaModule } from './common/prisma/prisma.module';
 import { JwtModule } from "@nestjs/jwt"
 import { JwtStrategy } from './common/jwt.strategy';
-import { WechatApiModule } from './wechat-api/wechat-api.module';
+import { WechatApiModule } from './common/wechat-api/wechat-api.module';
 import { QiniuModule } from './qiniu/qiniu.module';
 import { CategoryModule } from './category/category.module';
 import { TopicModule } from './topic/topic.module';

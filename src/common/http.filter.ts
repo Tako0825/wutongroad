@@ -1,9 +1,10 @@
 import { ArgumentsHost, Catch, ExceptionFilter,HttpException } from '@nestjs/common';
 import { Request, Response } from 'express'
-import { HttpStatusCode } from 'src/enum/HttpStatusCode';
+import { HttpStatusCode } from 'src/common/enum/HttpStatusCode';
 
 @Catch(HttpException)
 export class HttpFilter implements ExceptionFilter {
+  // 异常过滤器
   catch(exception: HttpException, host: ArgumentsHost) {
 
     const ctx = host.switchToHttp()

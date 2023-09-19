@@ -1,10 +1,10 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { LoginDto } from './dto/login.dto';
 import { JwtService } from '@nestjs/jwt';
-import { PrismaService } from 'src/prisma/prisma.service';
+import { PrismaService } from 'src/common/prisma/prisma.service';
 import { User } from '../user/entities/user.entities';
-import { WechatApiService } from 'src/wechat-api/wechat-api.service';
-import { WechatApiUrl } from 'src/enum/WechatApiUrl';
+import { WechatApiService } from 'src/common/wechat-api/wechat-api.service';
+import { WechatApiUrl } from 'src/common/enum/WechatApiUrl';
 import { v4 } from "uuid"
 import { Random } from 'mockjs';
  

@@ -1,9 +1,8 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
+import { Category, Topic } from '@prisma/client';
 import { UpdateCategoryDto } from 'src/category/dto/update-category.dto';
-import { Category } from 'src/category/entities/category.entity';
-import { PrismaService } from 'src/prisma/prisma.service';
+import { PrismaService } from 'src/common/prisma/prisma.service';
 import { UpdateTopicDto } from 'src/topic/dto/update-topic.dto';
-import { Topic } from 'src/topic/entities/topic.entity';
 import { UpdateUserDto } from 'src/user/dto/update-user.dto';
 import { User } from 'src/user/entities/user.entities';
 
@@ -110,16 +109,16 @@ export class CommonService {
         const oldValue = await this.tryToFindCategory(uuid)
         for(let key in data) {
             if(data[key] !== oldValue[key]){
-            const newValue:Category = await this.prisma.category.update({
-                where: {
-                uuid
-                },
-                data
-            })
-            return {
-                oldValue,
-                newValue
-            }
+                const newValue:Category = await this.prisma.category.update({
+                    where: {
+                        uuid
+                    },
+                    data
+                })
+                return {
+                    oldValue,
+                    newValue
+                }
             }
         }
         throw new HttpException({

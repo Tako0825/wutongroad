@@ -1,6 +1,6 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { CreateCommentDto } from './dto/create-comment.dto';
-import { PrismaService } from 'src/prisma/prisma.service';
+import { PrismaService } from 'src/common/prisma/prisma.service';
 import { CommonService } from 'src/common/common.service';
 
 @Injectable()
@@ -12,14 +12,15 @@ export class CommentService {
 
   // 服务 - 新建评论
   async create(createCommentDto: CreateCommentDto) {
-    await this.commonService.tryToFindUser(createCommentDto.user_id),
-    await this.commonService.tryToFindTopic(createCommentDto.topic_id)
+    const { user_id, topic_id, content, parent_id } = createCommentDto
+    await this.commonService.tryToFindUser(user_id),
+    await this.commonService.tryToFindTopic(topic_id)
     const comment = await this.prisma.comment.create({
       data: {
-        content: createCommentDto.content,
-        user_id: createCommentDto.user_id,
-        topic_id: createCommentDto.topic_id,
-        parent_id: createCommentDto.parent_id
+        content,
+        user_id,
+        topic_id,
+        parent_id
       }
     })
     return new HttpException({

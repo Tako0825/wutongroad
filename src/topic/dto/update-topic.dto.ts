@@ -1,8 +1,7 @@
-import { PartialType } from '@nestjs/mapped-types';
-import { CreateTopicDto } from './create-topic.dto';
+import { Topic } from '@prisma/client';
 
-export class UpdateTopicDto extends PartialType(CreateTopicDto) {
-    title: string;
-    content: string;
-    category_id: string;
+export class UpdateTopicDto implements Partial<Topic> {
+    title?: string
+    content?: string
+    category_id?: string
 }

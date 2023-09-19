@@ -1,7 +1,7 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { CreateTopicDto } from './dto/create-topic.dto';
 import { UpdateTopicDto } from './dto/update-topic.dto';
-import { PrismaService } from 'src/prisma/prisma.service';
+import { PrismaService } from 'src/common/prisma/prisma.service';
 import { CommonService } from 'src/common/common.service';
 
 @Injectable()
@@ -13,16 +13,17 @@ export class TopicService {
 
   // 服务 - 新建话题
   async create(createTopicDto: CreateTopicDto) {
-    // 操作数据库
+    const { title, content, category_id, user_id } = createTopicDto
+    await this.commonService.tryToFindUser(user_id)
+    await this.commonService.tryToFindCategory(category_id)
     const topic = await this.prisma.topic.create({
       data: {
-        title: createTopicDto.title,
-        content: createTopicDto.content,
-        category_id: createTopicDto.category_id,
-        user_id: createTopicDto.user_id
+        title,
+        content,
+        category_id,
+        user_id
       }
     })
-    // 响应信息
     return new HttpException({
       tip: "成功新建话题",
       topic

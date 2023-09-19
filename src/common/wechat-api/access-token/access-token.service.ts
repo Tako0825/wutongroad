@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
-import { WechatApiUrl } from 'src/enum/WechatApiUrl';
-import { WechatApiService } from 'src/wechat-api/wechat-api.service';
+import { WechatApiUrl } from 'src/common/enum/WechatApiUrl';
+import { WechatApiService } from 'src/common/wechat-api/wechat-api.service';
 
 @Injectable()
 export class AccessTokenService {
