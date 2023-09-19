@@ -44,6 +44,9 @@ dependencies:
   '@types/passport-jwt':
     specifier: ^3.0.9
     version: 3.0.9
+  '@types/socket.io':
+    specifier: ^3.0.2
+    version: 3.0.2
   '@types/uuid':
     specifier: ^9.0.3
     version: 9.0.3
@@ -101,6 +104,9 @@ dependencies:
   rxjs:
     specifier: ^7.8.1
     version: 7.8.1
+  socket.io:
+    specifier: ^4.7.2
+    version: 4.7.2
   uuid:
     specifier: ^9.0.1
     version: 9.0.1
@@ -1501,6 +1507,17 @@ packages:
       '@types/http-errors': 2.0.1
       '@types/mime': 3.0.1
       '@types/node': 20.6.0
+
+  /@types/socket.io@3.0.2:
+    resolution: {integrity: sha512-pu0sN9m5VjCxBZVK8hW37ZcMe8rjn4HHggBN5CbaRTvFwv5jOmuIRZEuddsBPa9Th0ts0SIo3Niukq+95cMBbQ==}
+    deprecated: This is a stub types definition. socket.io provides its own type definitions, so you do not need this installed.
+    dependencies:
+      socket.io: 4.7.2
+    transitivePeerDependencies:
+      - bufferutil
+      - supports-color
+      - utf-8-validate
+    dev: false
 
   /@types/stack-utils@2.0.1:
     resolution: {integrity: sha512-Hl219/BT5fLAaz6NDkSuhzasy49dwQS/DSdu4MdggFB8zcXv7vflBI3xp7FEmkmdDkBUI2bPUNeMttp2knYdxw==}
