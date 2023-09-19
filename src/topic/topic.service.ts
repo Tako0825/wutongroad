@@ -118,7 +118,7 @@ export class TopicService {
 
   // 服务 - 修改话题
   async update(uuid: string, updateTopicDto: UpdateTopicDto) {
-    const { newValue, oldValue } = await this.commonService.tryToUpdateTopic(uuid, updateTopicDto)
+    const { newValue, oldValue } = await this.commonService.updateRowByUuid(PrismaModel.topic, uuid, updateTopicDto)
     return new HttpException({
       tip: "成功修改话题标题",
       newValue,

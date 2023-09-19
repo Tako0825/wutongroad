@@ -53,7 +53,7 @@ export class UserService {
 
   // 服务 - 修改用户信息
   async update(uuid: string, updateUserDto: UpdateUserDto) {
-    const { oldValue, newValue } = await this.commonService.tryToUpdateUser(uuid, updateUserDto)
+    const { oldValue, newValue } = await this.commonService.updateRowByUuid(PrismaModel.user, uuid, updateUserDto)
     // 选择有需要的信息返回给前端, 注意不要泄露隐私信息
     return new HttpException({
       tip: "成功修改用户信息",

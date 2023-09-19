@@ -46,7 +46,7 @@ export class CategoryService {
 
   // 服务 - 修改话题分类描述
   async updateCategory(uuid: string, updateCategoryDto: UpdateCategoryDto) {
-    const { newValue, oldValue } = await this.commonService.tryToUpdateCategory(uuid, updateCategoryDto)
+    const { newValue, oldValue } = await this.commonService.updateRowByUuid(PrismaModel.category, uuid, updateCategoryDto)
     return new HttpException({
       tip: "成功修改话题分类",
       newValue,
