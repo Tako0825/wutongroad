@@ -1,12 +1,38 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { CommonService } from 'src/common/common.service';
+import { PrismaService } from 'src/common/prisma/prisma.service';
+import { CreateUserDto } from './dto/create-user.dto';
 
 @Injectable()
 export class UserService {
   constructor(
+    private prisma:PrismaService,
     private commonService:CommonService
   ) {}
+
+  // 服务 - 创建用户
+  async create(createUserDto:CreateUserDto) {
+    const { openid, session_key } = createUserDto
+    const user = await this.prisma.user.create({
+      data: {
+        openid,
+        session_key,
+      }
+    })
+    const { nickname, gender, role, create_time, avatar, uuid } = user
+    return new HttpException({
+      tip: "成功创建新用户",
+      userInfo: {
+        nickname,
+        gender,
+        role,
+        create_time,
+        avatar,
+        uuid
+      }
+    }, HttpStatus.OK)
+  }
 
   // 服务 - 查找指定用户
   async findOne(uuid: string) {

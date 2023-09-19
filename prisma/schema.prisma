@@ -7,6 +7,14 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+enum ModelType {
+  user
+  category
+  topic 
+  comment
+  notice
+}
+
 // 用户
 model User {
   uuid        String   @id @default(uuid()) // uuid

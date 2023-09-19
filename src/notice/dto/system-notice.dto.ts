@@ -1,4 +1,4 @@
-import { $Enums, Notice } from "@prisma/client";
+import { Notice } from "@prisma/client";
 import { IsNotEmpty } from "class-validator";
 
 export class SystemNoticeDto implements Partial<Notice> {

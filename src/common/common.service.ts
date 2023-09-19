@@ -1,14 +1,18 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
-import { Category, Topic } from '@prisma/client';
+import { Category, PrismaClient, Topic, User } from '@prisma/client';
+import { PrismaClientOptions } from '@prisma/client/runtime/library';
 import { UpdateCategoryDto } from 'src/category/dto/update-category.dto';
 import { PrismaService } from 'src/common/prisma/prisma.service';
 import { UpdateTopicDto } from 'src/topic/dto/update-topic.dto';
 import { UpdateUserDto } from 'src/user/dto/update-user.dto';
-import { User } from 'src/user/entities/user.entities';
 
 @Injectable()
 export class CommonService {
     constructor(private prisma:PrismaService) {}
+
+    // 尝试根据 uuid 寻找相应数据
+    async getEntityByUuid(type: any, uuid:string) {
+    }
 
     // 尝试查询话题
     async tryToFindTopic(uuid: string) {

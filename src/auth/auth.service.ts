@@ -2,18 +2,18 @@ import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { LoginDto } from './dto/login.dto';
 import { JwtService } from '@nestjs/jwt';
 import { PrismaService } from 'src/common/prisma/prisma.service';
-import { User } from '../user/entities/user.entities';
 import { WechatApiService } from 'src/common/wechat-api/wechat-api.service';
 import { WechatApiUrl } from 'src/common/enum/WechatApiUrl';
-import { v4 } from "uuid"
-import { Random } from 'mockjs';
+import { User } from '@prisma/client';
+import { UserService } from 'src/user/user.service';
  
 @Injectable()
 export class AuthService {
     constructor(
         private jwt:JwtService,
         private prisma:PrismaService,
-        private wechatApi:WechatApiService
+        private wechatApi:WechatApiService,
+        private userService:UserService
     ) {}
 
     // 服务 - 自动登录
@@ -84,33 +84,28 @@ export class AuthService {
 
     // 登录(1.1) - 获取用户信息(可能存在, 也可能不存在)
     private async getUserInfo(data: any) {
+        const { openid, session_key } = data
         // 判断用户是否存在
         const user = await this.prisma.user.findFirst({
             where: {
-                openid: data.openid
+                openid
             }
         })
         // 若用户不存在 - 新建用户
         if(!user) {
-            return await this.prisma.user.create({
-                data: {
-                    uuid: v4(),
-                    nickname: "uu",
-                    role: "user",
-                    openid: data.openid,
-                    session_key: data.session_key,
-                    create_time: Random.date("yyyy-MM-dd"),
-                }
+            return await this.userService.create({
+                openid,
+                session_key
             })
         }  
         // 若用户存在 - 更新用户的 session_key
-        else if(user.session_key !== data.session_key) {
+        else if(user.session_key !== session_key) {
             return await this.prisma.user.update({
                 where: {
-                    openid: data.openid
+                    openid
                 },
                 data: {
-                    session_key: data.session_key
+                    session_key
                 }
             })
         }
