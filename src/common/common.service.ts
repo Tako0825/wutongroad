@@ -10,9 +10,14 @@ import { PrismaModel } from './enum/PrismaModel';
 export class CommonService {
     constructor(private prisma:PrismaService) {}
 
-    // 尝试根据 uuid 寻找相应数据
-    async getEntityByUuid(type: PrismaModel, uuid:string) {
-        const entity = await (this.prisma[type] as any).findFirst({
+    /**
+     * 尝试根据 uuid 获取数据模型的实体 entity
+     * @param { PrismaModel } model - 具体的数据模型
+     * @param { string } uuid - 当前数据模型相应uuid
+     * @return - entity | HttpException(异常)
+    */
+    async getEntityByUuid(model: PrismaModel, uuid:string) {
+        const entity = await (this.prisma[model] as any).findFirst({
             where: {
                 uuid
             }
@@ -32,16 +37,16 @@ export class CommonService {
         const oldValue = await this.getEntityByUuid(PrismaModel.user, uuid)
         for(let key in data) {
             if(data[key] !== oldValue[key]){
-            const newValue:User = await this.prisma.user.update({
-                where: {
-                uuid
-                },
-                data
-            })
-            return {
-                oldValue,
-                newValue
-            }
+                const newValue:User = await this.prisma.user.update({
+                    where: {
+                    uuid
+                    },
+                    data
+                })
+                return {
+                    oldValue,
+                    newValue
+                }
             }
         }
         throw new HttpException({
