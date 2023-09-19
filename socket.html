@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    
+</body>
+
+
+<script type="module">
+    import { io } from  "https://cdn.socket.io/4.4.1/socket.io.esm.min.js"
+    const socket = io("http://localhost:3001")
+
+    socket.on("notice", data => {
+        console.log(data);
+    })
+
+    socket.emit("notice",{
+        uuid: "6a3630af-1fc3-4e91-a290-6b1ecc939314"
+    })
+</script>
+</html>

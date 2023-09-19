@@ -63,6 +63,17 @@ export class NoticeService {
     }, HttpStatus.OK)
   }
 
+  // 服务 - 获取指定用户所有通知
+  async findUserAll(user_id: string) {
+    await this.commonService.getEntityByUuid(PrismaModel.user, user_id)
+    const noticeList = await this.prisma.notice.findMany({
+      where: {
+        recipient_id: user_id
+      }
+    })
+    return noticeList
+  }
+
   // 服务 - 删除通知
   async delete(uuid: string) {
     

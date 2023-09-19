@@ -2,9 +2,12 @@ import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import { ResponseInterceptor } from './common/response.interceptor';
 import { HttpFilter } from './common/http.filter';
+import * as cors from "cors"
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
+
+  app.use(cors())
 
   // 请求前缀 - api
   app.setGlobalPrefix("api")
