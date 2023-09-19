@@ -10,7 +10,6 @@ import { CommonModule } from './common/common.module';
 import { CommentModule } from './comment/comment.module';
 import { NoticeModule } from './notice/notice.module';
 import { EventsModule } from './events/events.module';
-import { SocketModule } from './socket/socket.module';
 
 @Module({
   imports: [
@@ -33,7 +32,6 @@ import { SocketModule } from './socket/socket.module';
     CommentModule,
     NoticeModule,
     EventsModule,
-    SocketModule,
   ],
   controllers: [],
   providers: [JwtStrategy],
