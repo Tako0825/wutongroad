@@ -9,7 +9,7 @@ import { UserModule } from './user/user.module';
 import { CommonModule } from './common/common.module';
 import { CommentModule } from './comment/comment.module';
 import { NoticeModule } from './notice/notice.module';
-import { EventsModule } from './events/events.module';
+import { SocketModule } from './socket/socket.module';
 
 @Module({
   imports: [
@@ -31,7 +31,7 @@ import { EventsModule } from './events/events.module';
     CommonModule,
     CommentModule,
     NoticeModule,
-    EventsModule,
+    SocketModule,
   ],
   controllers: [],
   providers: [JwtStrategy],

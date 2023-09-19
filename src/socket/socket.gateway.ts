@@ -1,14 +1,8 @@
 import { MessageBody, SubscribeMessage, WebSocketGateway } from '@nestjs/websockets';
 import { NoticeService } from 'src/notice/notice.service';
 
-@WebSocketGateway(3001, { 
-  allowEIO3: true,
-  cors: {
-    origin: 'http://127.0.0.1:5500',
-    credentials: true,
-  }
-})
-export class EventsGateway {
+@WebSocketGateway()
+export class SocketGateway {
   constructor(
     private noticeService:NoticeService
   ) {}
