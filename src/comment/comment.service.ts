@@ -2,6 +2,7 @@ import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { CreateCommentDto } from './dto/create-comment.dto';
 import { PrismaService } from 'src/common/prisma/prisma.service';
 import { CommonService } from 'src/common/common.service';
+import { PrismaModel } from 'src/common/enum/PrismaModel';
 
 @Injectable()
 export class CommentService {
@@ -13,8 +14,8 @@ export class CommentService {
   // 服务 - 新建评论
   async create(createCommentDto: CreateCommentDto) {
     const { user_id, topic_id, content, parent_id } = createCommentDto
-    await this.commonService.tryToFindUser(user_id),
-    await this.commonService.tryToFindTopic(topic_id)
+    await this.commonService.getEntityByUuid(PrismaModel.user, user_id),
+    await this.commonService.getEntityByUuid(PrismaModel.topic, topic_id)
     const comment = await this.prisma.comment.create({
       data: {
         content,
@@ -75,7 +76,7 @@ export class CommentService {
 
   // 服务 - 获取指定评论
   async findOne(uuid: string) {
-    const topic = await this.commonService.tryToFindComment(uuid)
+    const topic = await this.commonService.getEntityByUuid(PrismaModel.comment, uuid)
     return new HttpException({
       tip: "成功获取指定评论",
       topic
@@ -84,7 +85,7 @@ export class CommentService {
 
   // 服务 - 获取指定用户下所有评论
   async findUserComment(user_id: string) {
-    const user = await this.commonService.tryToFindUser(user_id)
+    const user = await this.commonService.getEntityByUuid(PrismaModel.user, user_id)
     const commentList = await this.prisma.comment.findMany({
       where: {
         user_id
@@ -100,7 +101,7 @@ export class CommentService {
 
   // 服务 - 获取指定话题下所有评论
   async findTopicComment(topic_id: string) {
-    const topic = await this.commonService.tryToFindTopic(topic_id)
+    const topic = await this.commonService.getEntityByUuid(PrismaModel.topic, topic_id)
     const commentList = await this.prisma.comment.findMany({
       where: {
         topic_id
@@ -116,7 +117,7 @@ export class CommentService {
 
   // 服务 - 获取指定话题下所有评论的总数
   async getTopicCommentTotal(topic_id:string) {
-    await this.commonService.tryToFindTopic(topic_id)
+    await this.commonService.getEntityByUuid(PrismaModel.topic, topic_id)
     const total = await this.prisma.comment.count({
       where: {
         topic_id
@@ -143,7 +144,7 @@ export class CommentService {
 
   // 服务 - 删除指定评论
   async remove(uuid: string) {
-    await this.commonService.tryToFindComment(uuid)
+    await this.commonService.getEntityByUuid( PrismaModel.comment, uuid)
     await this.prisma.comment.delete({
       where: {
         uuid

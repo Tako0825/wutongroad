@@ -21,4 +21,17 @@ export class NoticeController {
   createSystemNotice(@Body() systemNoticeDto: SystemNoticeDto) {
     return this.noticeService.createSystemNotice(systemNoticeDto);
   }
+
+  // 接口 - 获取指定通知
+  @Get(":uuid")
+  findOne(@Param("uuid") uuid:string) {
+    return this.noticeService.findOne(uuid)
+  }
+
+  // 接口 - 删除通知
+  @Delete(":uuid")
+  delete(@Param("uuid") uuid:string) {
+    return this.noticeService.delete(uuid)
+  }
+  
 }

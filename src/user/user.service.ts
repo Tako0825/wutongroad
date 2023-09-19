@@ -3,6 +3,7 @@ import { UpdateUserDto } from './dto/update-user.dto';
 import { CommonService } from 'src/common/common.service';
 import { PrismaService } from 'src/common/prisma/prisma.service';
 import { CreateUserDto } from './dto/create-user.dto';
+import { PrismaModel } from 'src/common/enum/PrismaModel';
 
 @Injectable()
 export class UserService {
@@ -36,7 +37,7 @@ export class UserService {
 
   // 服务 - 查找指定用户
   async findOne(uuid: string) {
-    const user = await this.commonService.tryToFindUser(uuid)
+    const user = await this.commonService.getEntityByUuid(PrismaModel.user, uuid)
     const { nickname, role, gender, avatar, create_time } = user
     return new HttpException({
       tip: "成功找到指定用户",

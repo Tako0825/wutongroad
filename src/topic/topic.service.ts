@@ -3,6 +3,7 @@ import { CreateTopicDto } from './dto/create-topic.dto';
 import { UpdateTopicDto } from './dto/update-topic.dto';
 import { PrismaService } from 'src/common/prisma/prisma.service';
 import { CommonService } from 'src/common/common.service';
+import { PrismaModel } from 'src/common/enum/PrismaModel';
 
 @Injectable()
 export class TopicService {
@@ -14,8 +15,8 @@ export class TopicService {
   // 服务 - 新建话题
   async create(createTopicDto: CreateTopicDto) {
     const { title, content, category_id, user_id } = createTopicDto
-    await this.commonService.tryToFindUser(user_id)
-    await this.commonService.tryToFindCategory(category_id)
+    await this.commonService.getEntityByUuid(PrismaModel.user, user_id)
+    await this.commonService.getEntityByUuid(PrismaModel.category, category_id)
     const topic = await this.prisma.topic.create({
       data: {
         title,
@@ -76,7 +77,7 @@ export class TopicService {
 
   // 服务 - 获取指定话题
   async findOne(uuid: string) {
-    const topic = await this.commonService.tryToFindTopic(uuid)
+    const topic = await this.commonService.getEntityByUuid(PrismaModel.topic, uuid)
     return new HttpException({
       tip: "成功获取指定话题",
       topic
@@ -85,7 +86,7 @@ export class TopicService {
 
   // 服务 - 获取指定用户下所有话题
   async findUserTopic(user_id: string) {
-    const user = await this.commonService.tryToFindUser(user_id)
+    const user = await this.commonService.getEntityByUuid(PrismaModel.user, user_id)
     const topicList = await this.prisma.topic.findMany({
       where: {
         user_id
@@ -101,7 +102,7 @@ export class TopicService {
 
   // 服务 - 获取指定分类下所有话题
   async findCategoryTopic(category_id: string) {
-    const category = await this.commonService.tryToFindCategory(category_id)
+    const category = await this.commonService.getEntityByUuid(PrismaModel.category,category_id)
     const topicList = await this.prisma.topic.findMany({
       where: {
         category_id
@@ -127,7 +128,7 @@ export class TopicService {
 
   // 服务 - 删除话题
   async remove(uuid: string) {
-    await this.commonService.tryToFindTopic(uuid)
+    await this.commonService.getEntityByUuid( PrismaModel.topic,uuid)
     await this.prisma.topic.delete({
       where: {
         uuid

@@ -3,6 +3,7 @@ import { CreateCategoryDto } from './dto/create-category.dto';
 import { UpdateCategoryDto } from './dto/update-category.dto';
 import { PrismaService } from 'src/common/prisma/prisma.service';
 import { CommonService } from 'src/common/common.service';
+import { PrismaModel } from 'src/common/enum/PrismaModel';
 
 @Injectable()
 export class CategoryService {
@@ -36,7 +37,7 @@ export class CategoryService {
 
   // 服务 - 获取指定话题分类
   async findOne(uuid: string) {
-    const category = await this.commonService.tryToFindCategory(uuid)
+    const category = await this.commonService.getEntityByUuid(PrismaModel.category, uuid)
     return new HttpException({
       tip: "成功获取指定的话题分类",
       category
@@ -55,7 +56,7 @@ export class CategoryService {
 
   // 服务 - 删除指定话题分类
   async remove(uuid: string) {
-    await this.commonService.tryToFindCategory(uuid)
+    await this.commonService.getEntityByUuid(PrismaModel.category, uuid)
     const category = await this.prisma.category.delete({
       where: {
         uuid

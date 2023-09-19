@@ -4,6 +4,7 @@ import { SystemNoticeDto } from './dto/system-notice.dto';
 import { NoticeType } from '@prisma/client';
 import { CommonService } from 'src/common/common.service';
 import { CreateNoticeDto } from './dto/create-notice.dto';
+import { PrismaModel } from 'src/common/enum/PrismaModel';
 
 @Injectable()
 export class NoticeService {
@@ -15,8 +16,8 @@ export class NoticeService {
   // 服务 - 新建消息通知
   async create(createNoticeDto:CreateNoticeDto) {
     const { recipient_id, sender_id, content, type } = createNoticeDto
-    const recipient = await this.commonService.tryToFindUser(recipient_id)
-    const sender = await this.commonService.tryToFindUser(sender_id)
+    const recipient = await this.commonService.getEntityByUuid(PrismaModel.user, recipient_id)
+    const sender = await this.commonService.getEntityByUuid(PrismaModel.user, sender_id)
     if(recipient.uuid === sender.uuid) {
       throw new HttpException({
         tip: "寄件人和收件人不允许是同一用户"
@@ -39,7 +40,7 @@ export class NoticeService {
   // 服务 - 新建系统通知
   async createSystemNotice(systemNoticeDto:SystemNoticeDto) {
     const { recipient_id, content } = systemNoticeDto
-    await this.commonService.tryToFindUser(recipient_id)
+    await this.commonService.getEntityByUuid(PrismaModel.user, recipient_id)
     const notice = await this.prisma.notice.create({
       data: {
         type: NoticeType.system,
@@ -51,5 +52,19 @@ export class NoticeService {
       tip: "成功新建系统通知",
       notice
     },HttpStatus.OK)
+  }
+
+  // 服务 - 获取指定通知
+  async findOne(uuid: string) {
+    const notice =  await this.commonService.getEntityByUuid(PrismaModel.notice, uuid)
+    return new HttpException({
+      tip: "成功获取指定通知",
+      notice
+    }, HttpStatus.OK)
+  }
+
+  // 服务 - 删除通知
+  async delete(uuid: string) {
+    
   }
 }
