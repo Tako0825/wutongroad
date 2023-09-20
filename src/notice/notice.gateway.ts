@@ -1,12 +1,14 @@
-import { UseFilters, UseGuards } from '@nestjs/common';
-import { AuthGuard } from '@nestjs/passport';
+import { UseFilters, UseInterceptors } from '@nestjs/common';
 import { MessageBody, SubscribeMessage, WebSocketGateway, WsException } from '@nestjs/websockets';
 import { Socket } from 'socket.io';
 import { CommonService } from 'src/common/common.service';
 import { PrismaModel } from 'src/common/enum/PrismaModel';
 import { PrismaService } from 'src/common/prisma/prisma.service';
 import { WsFilter } from 'src/common/ws.filter';
+import { WsInterceptor } from 'src/common/ws.interceptor';
 
+@UseInterceptors(new WsInterceptor())
+@UseFilters(new WsFilter())
 @WebSocketGateway(3001, {
   namespace: "notice",
   cors: {
@@ -19,8 +21,6 @@ export class NoticeGateway {
     private commonService:CommonService
   ) {}
   
-  @UseFilters(new WsFilter())
-  // @UseGuards(AuthGuard("jwt"))
   @SubscribeMessage('getAll')
   async handleMessage(@MessageBody() data:any, socket: Socket) {
     const { recipient_id } = data
@@ -29,7 +29,6 @@ export class NoticeGateway {
     } catch(error) {
       throw new WsException(error)
     }
-
     const noticeList = await this.prisma.notice.findMany({
       where: {
         recipient_id
