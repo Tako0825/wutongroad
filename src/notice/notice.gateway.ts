@@ -1,7 +1,5 @@
 import { MessageBody, SubscribeMessage, WebSocketGateway } from '@nestjs/websockets';
 import { Socket } from 'socket.io';
-import { CommonService } from 'src/common/common.service';
-import { PrismaModel } from 'src/common/enum/PrismaModel';
 import { PrismaService } from 'src/common/prisma/prisma.service';
 
 @WebSocketGateway(3001, {
@@ -13,7 +11,6 @@ import { PrismaService } from 'src/common/prisma/prisma.service';
 export class NoticeGateway {
   constructor(
     private prisma:PrismaService,
-    private commonService:CommonService
   ) {}
   
   @SubscribeMessage('getAll')
