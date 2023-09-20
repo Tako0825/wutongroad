@@ -31,10 +31,10 @@ export class NoticeService {
         sender_id
       }
     })
-    return new HttpException({
+    return {
       tip: "成功新建消息通知",
       notice
-    },HttpStatus.OK)
+    }
   }
 
   // 服务 - 新建系统通知
@@ -48,19 +48,19 @@ export class NoticeService {
         recipient_id
       }
     })
-    return new HttpException({
+    return {
       tip: "成功新建系统通知",
       notice
-    },HttpStatus.OK)
+    }
   }
 
   // 服务 - 获取指定通知
   async findOne(uuid: string) {
     const notice =  await this.commonService.getEntityByUuid(PrismaModel.notice, uuid)
-    return new HttpException({
+    return {
       tip: "成功获取指定通知",
       notice
-    }, HttpStatus.OK)
+    }
   }
 
   // 服务 - 获取指定用户所有通知

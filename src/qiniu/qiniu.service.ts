@@ -24,9 +24,9 @@ export class QiniuService {
     // 服务 - 获取七牛云上传 token
     getUploadToken() {
         const putPolicy = new rs.PutPolicy(this.options)
-        return new HttpException({
+        return {
             tip: "成功获取七牛云上传凭据",
             uploadToken: putPolicy.uploadToken(this.mac)
-        }, HttpStatus.OK)
+        }
     }
 }
