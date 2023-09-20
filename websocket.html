@@ -30,19 +30,24 @@
       // ...
    })
 
-   socket.on("getAll", data => {
+   socket.on("get-all-notice", data => {
+      console.log(data);
+   })
+
+   socket.on("get-unread-count", data => {
       console.log(data);
    })
 
    const input = document.querySelector("input")
    const button = document.querySelector("button")
    button.addEventListener("click", () => {
-      socket.emit("getAll", {
+      socket.emit("get-all-notice", {
          recipient_id: input.value
       })
       input.value = null
    })
 
+   socket.emit("get-unread-count")
 
  </script>
 

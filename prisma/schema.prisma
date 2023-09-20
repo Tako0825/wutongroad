@@ -70,6 +70,7 @@ model Notice {
   content      String? @db.Text // 内容
   sender_id    String? // 寄件人 uuid
   recipient_id String // 收件人 uuid
+  is_read      Boolean @default(false)
 }
 
 // 消息通知类型

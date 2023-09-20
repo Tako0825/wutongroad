@@ -5,9 +5,6 @@ import { Observable, map } from 'rxjs';
 export class WsInterceptor implements NestInterceptor {
   intercept(context: ExecutionContext, next: CallHandler): Observable<any> {
     return next.handle().pipe(map(({ event, data }) => {
-      console.log(event);
-      console.log(data);
-      
       return {
         event,
         data: {
