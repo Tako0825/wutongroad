@@ -15,11 +15,19 @@
    const socket = io("ws://localhost:3001/notice")
 
    socket.on("connect", () => {
-      console.log(socket.id, "我连接上啦");
+      console.log(socket.id, "连接成功");
+      // ...
    })
 
    socket.on("close", () => {
-      console.log("我断开连接了");
+      console.log("断开连接");
+      // ...
+   })
+
+   // 捕获异常 - WsException
+   socket.on("message", error => {
+      console.log(error);
+      // ...
    })
 
    socket.on("getAll", data => {
