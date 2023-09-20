@@ -1,5 +1,6 @@
-import { PrismaClient } from "@prisma/client";
+import { $Enums, PrismaClient } from "@prisma/client";
 import { Random } from "mockjs";
+import { v4 } from "uuid";
 
 async function main() {
     const prisma = new PrismaClient()
@@ -17,14 +18,7 @@ async function main() {
     const uuidRandom_comment = commentsList[Random.integer(0,commentsList.length-1)].uuid
 
     // 在这里造数据
-    await prisma.comment.create({
-        data: {
-            user_id: uuidRandom_user,
-            topic_id: uuidRandom_topic,
-            content: Random.cparagraph(10,20),
-            is_approved: true,
-        }
-    })
+    
 }
 
 for(let i=0; i<15; i++) {

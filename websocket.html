@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+   <input type="text">
+   <button type="button">发送</button>
+</body>
+
+<script type="module">
+   import { io } from "https://cdn.socket.io/4.3.2/socket.io.esm.min.js";
+   const socket = io("ws://localhost:3001/notice")
+
+   socket.on("connect", () => {
+      console.log(socket.id, "我连接上啦");
+   })
+
+   socket.on("close", () => {
+      console.log("我断开连接了");
+   })
+
+   socket.on("getAll", data => {
+      console.log(data);
+   })
+
+   const input = document.querySelector("input")
+   const button = document.querySelector("button")
+   button.addEventListener("click", () => {
+      socket.emit("getAll", {
+         recipient_id: input.value
+      })
+      input.value = null
+   })
+
+
+ </script>
+
+</html>
