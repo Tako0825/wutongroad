@@ -16,11 +16,10 @@
    const socket = new WebSocket("ws:localhost:3001/notice")
 
    // open
-   socket.addEventListener("open", data => {
-      console.log("@", data);
+   socket.addEventListener("open", () => {
       button.addEventListener("click", () => {
          socket.send(JSON.stringify({
-            event: "chat",
+            event: "user-connect",
             data: input.value
          }))
          input.value = null
@@ -29,6 +28,7 @@
 
    // message - 1.socket.send() 2.return { event, data }
    socket.addEventListener("message", message => {
+      console.log(message);
       const response = JSON.parse(message.data)
       console.log(response);
    })
