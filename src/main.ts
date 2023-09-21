@@ -2,12 +2,18 @@ import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import { ResponseInterceptor } from './common/response.interceptor';
 import { HttpFilter } from './common/http.filter';
+import { WsAdapter } from "@nestjs/platform-ws"
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
 
   // 跨域 - CORS
-  app.enableCors()
+  app.enableCors({
+    origin: "*"
+  })
+
+  // 适配器 - ws库
+  app.useWebSocketAdapter(new WsAdapter(app));
 
   // 请求前缀 - api
   app.setGlobalPrefix("api")
