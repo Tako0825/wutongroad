@@ -38,6 +38,10 @@
       console.log(data);
    })
 
+   socket.on("user-connect", data => {
+      console.log(data.value);
+   })
+
    const input = document.querySelector("input")
    const button = document.querySelector("button")
    button.addEventListener("click", () => {
