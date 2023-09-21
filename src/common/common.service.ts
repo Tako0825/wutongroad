@@ -34,10 +34,10 @@ export class CommonService {
      * @param { string } uuid - 当前数据实体对应的uuid
      * @return - entity | HttpException(异常)
     */
-    async updateRowByUuid(model: PrismaModel, uuid: string, data: Record<string, any>) {
+    async updateRowByUuid<T>(model: PrismaModel, uuid: string, data: T) {
         const oldValue = await this.getEntityByUuid(model, uuid)
         for(let key in data) {
-            if(data[key] !== oldValue[key]) {
+                if(data[key] !== oldValue[key]) {
                 const newValue = await (this.prisma[model] as any).update({
                     where: {
                         uuid

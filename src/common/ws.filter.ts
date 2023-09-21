@@ -10,7 +10,7 @@ export class WsFilter extends BaseWsExceptionFilter {
     const { response } = exception.getError() as any
     socket.send({
       type: "error",
-      message: response.tip
+      message: response?.tip
     })
   }
 }

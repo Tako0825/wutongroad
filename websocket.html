@@ -47,8 +47,9 @@
       input.value = null
    })
 
-   socket.emit("get-unread-count")
-
+   socket.emit("set-all-read", {
+      recipient_id: "6a3630af-1fc3-4e91-a290-6b1ecc939314"
+   })
  </script>
 
 </html>
