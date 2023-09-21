@@ -1,22 +1,18 @@
-import { OnGatewayConnection, SubscribeMessage, WebSocketGateway, WebSocketServer } from '@nestjs/websockets';
-import { Server } from 'ws';
+import { MessageBody, OnGatewayConnection, SubscribeMessage, WebSocketGateway, WebSocketServer } from '@nestjs/websockets';
+import { WebSocket } from 'ws';
 
-@WebSocketGateway(3001)
+@WebSocketGateway(3001, { path: "/notice" })
 export class NoticeGateway implements OnGatewayConnection {
-  @WebSocketServer()
-  server: Server
-
-  handleConnection(client: any, ...args: any[]) {
-    //...
+  handleConnection(socket: WebSocket, dto: any) {
+    console.log("连接成功");
   }
 
   @SubscribeMessage('chat')
-  handleMessage(client: any, payload: any) {
-    console.log(client);
-    console.log(payload);
+  handelChat(@MessageBody() data:any, socket: WebSocket) {
+    console.log(data);
     return {
       event: "chat",
-      return: "hello."
+      data
     }
   }
 }

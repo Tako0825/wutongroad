@@ -11,49 +11,27 @@
 </body>
 
 <script type="module">
-   import { io } from "https://cdn.socket.io/4.3.2/socket.io.esm.min.js";
-   const socket = io("ws://localhost:3001/notice")
-
-   socket.on("connect", () => {
-      console.log(socket.id, "连接成功");
-      // ...
-   })
-
-   socket.on("close", () => {
-      console.log("断开连接");
-      // ...
-   })
-
-   // 捕获异常 - WsException
-   socket.on("message", error => {
-      console.log(error);
-      // ...
-   })
-
-   socket.on("get-all-notice", data => {
-      console.log(data);
-   })
-
-   socket.on("get-unread-count", data => {
-      console.log(data);
-   })
-
-   socket.on("user-connect", data => {
-      console.log(data.value);
-   })
-
    const input = document.querySelector("input")
    const button = document.querySelector("button")
-   button.addEventListener("click", () => {
-      socket.emit("get-all-notice", {
-         recipient_id: input.value
+   const socket = new WebSocket("ws:localhost:3001/notice")
+
+   // open
+   socket.addEventListener("open", data => {
+      console.log("@", data);
+      button.addEventListener("click", () => {
+         socket.send(JSON.stringify({
+            event: "chat",
+            data: input.value
+         }))
+         input.value = null
       })
-      input.value = null
    })
 
-   socket.emit("set-all-read", {
-      recipient_id: "6a3630af-1fc3-4e91-a290-6b1ecc939314"
+   // message - 1.socket.send() 2.return { event, data }
+   socket.addEventListener("message", message => {
+      const response = JSON.parse(message.data)
+      console.log(response);
    })
- </script>
+</script>
 
 </html>
