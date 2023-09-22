@@ -9,6 +9,7 @@ import { UserModule } from './user/user.module';
 import { CommonModule } from './common/common.module';
 import { CommentModule } from './comment/comment.module';
 import { NoticeModule } from './notice/notice.module';
+import { ApprovalModule } from './approval/approval.module';
 
 @Module({
   imports: [
@@ -30,6 +31,7 @@ import { NoticeModule } from './notice/notice.module';
     CommonModule,
     CommentModule,
     NoticeModule,
+    ApprovalModule,
   ],
   controllers: [],
   providers: [JwtStrategy],
