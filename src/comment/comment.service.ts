@@ -39,7 +39,7 @@ export class CommentService {
       recipient_id
     })
     // 3、向收件人发送实时通知
-    this.noticeGateway.sendNotice(notice.uuid)
+    this.noticeGateway.sendNotice(notice)
     return {
       tip: "成功新建评论",
       comment

@@ -1,7 +1,5 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { PrismaService } from 'src/common/prisma/prisma.service';
-import { SystemNoticeDto } from './dto/system-notice.dto';
-import { NoticeType } from '@prisma/client';
 import { CommonService } from 'src/common/common.service';
 import { CreateNoticeDto } from './dto/create-notice.dto';
 import { PrismaModel } from 'src/common/enum/PrismaModel';
@@ -37,29 +35,18 @@ export class NoticeService {
     }
   }
 
-  // 服务 - 新建系统通知
-  async createSystemNotice(systemNoticeDto:SystemNoticeDto) {
-    const { recipient_id, content } = systemNoticeDto
-    await this.commonService.getEntityByUuid(PrismaModel.user, recipient_id)
-    const notice = await this.prisma.notice.create({
-      data: {
-        type: NoticeType.system,
-        content,
-        recipient_id
+  // 接口 - 获取指定用户未读通知数量
+  async getUserUnreadCount(user_id: string) {
+    await this.commonService.getEntityByUuid(PrismaModel.user, user_id)
+    const count = await this.prisma.notice.count({
+      where: {
+        recipient_id: user_id,
+        is_read: false
       }
     })
     return {
-      tip: "成功新建系统通知",
-      notice
-    }
-  }
-
-  // 服务 - 获取指定通知
-  async findOne(uuid: string) {
-    const notice =  await this.commonService.getEntityByUuid(PrismaModel.notice, uuid)
-    return {
-      tip: "成功获取指定通知",
-      notice
+      tip: "成功获取未读通知数量",
+      count
     }
   }
 
@@ -71,11 +58,22 @@ export class NoticeService {
         recipient_id: user_id
       }
     })
-    return noticeList
+    return {
+      tip: "成功获取所有通知",
+      noticeList
+    }
   }
 
-  // 服务 - 删除通知
-  async delete(uuid: string) {
-    
+  // 服务 - 清空指定用户所有通知
+  async clearUserAll(user_id: string) {
+    await this.commonService.getEntityByUuid(PrismaModel.user, user_id)
+    await this.prisma.notice.deleteMany({
+      where: {
+        recipient_id: user_id
+      }
+    })
+    return {
+      tip: "成功删除所有通知"
+    }
   }
 }

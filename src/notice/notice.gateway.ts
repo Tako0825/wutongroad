@@ -48,8 +48,7 @@ export class NoticeGateway implements OnGatewayConnection, OnGatewayDisconnect {
   }
 
   // todo - 实时发送通知 (新建消息后发出)
-  async sendNotice(notice_id: string) {
-    const notice = await this.commonService.getEntityByUuid(PrismaModel.notice, notice_id)
+  async sendNotice(notice: Notice) {
     const { recipient_id } = notice
     // 判断收件人是否在线, 如果在线就实时发送通知
     if(this.onlineList[recipient_id]) {
