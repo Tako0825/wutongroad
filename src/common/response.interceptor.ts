@@ -7,8 +7,6 @@ export class ResponseInterceptor implements NestInterceptor {
   // 响应拦截器
   intercept(context: ExecutionContext, next: CallHandler): Observable<any> {
     return next.handle().pipe(map(response => {
-      console.log(response);
-      
       if(!response) {
         throw new HttpException({
           tip: "服务器提供了该接口但未处理响应内容, 请联系服务器开发者"

@@ -35,7 +35,6 @@ export class TopicController {
   @Get("/pending-approval/page")
   @UsePipes(Validation)
   findPendingApproval(@Query() pageDto:PageDto) {
-    console.log(":2313221");
     // 默认每页 10 条话题, 从第 1 页开始查询
     const { pageSize = 10, currentPage = 1 } = pageDto
     return this.topicService.findPendingApproval(+pageSize, +currentPage)

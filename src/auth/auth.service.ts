@@ -20,8 +20,6 @@ export class AuthService {
     public async verify(user:User) {
         // 选择有需要的用户信息返回给前端
         const { uuid, nickname, role } = user
-        // 服务器日志 - 用户自动登录
-        console.log(`${nickname}(${uuid})-自动登录成功`);
         return {
             tip: "自动登录成功",
             userInfo: {
@@ -41,8 +39,6 @@ export class AuthService {
         const token:string = data.token
         // 选择有需要的用户信息返回给前端
         const { uuid, nickname, role } = user
-        // 服务器日志 - 用户登录
-        console.log(`${nickname}(${uuid})-登录成功`);
         return {
             tip: "登录成功",
             userInfo: {

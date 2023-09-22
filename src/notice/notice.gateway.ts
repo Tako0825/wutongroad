@@ -1,15 +1,12 @@
-import { ConnectedSocket, MessageBody, OnGatewayConnection, OnGatewayDisconnect, SubscribeMessage, WebSocketGateway, WebSocketServer, WsException } from '@nestjs/websockets';
+import { ConnectedSocket, MessageBody, OnGatewayConnection, OnGatewayDisconnect, SubscribeMessage, WebSocketGateway, WsException } from '@nestjs/websockets';
 import { Notice, User } from '@prisma/client';
-import { IncomingMessage } from 'http';
 import { CommonService } from 'src/common/common.service';
 import { PrismaModel } from 'src/common/enum/PrismaModel';
 import { PrismaService } from 'src/common/prisma/prisma.service';
-import { Server, WebSocket } from 'ws';
+import { WebSocket } from 'ws';
 
 @WebSocketGateway(3001, { path: "/notice" })
 export class NoticeGateway implements OnGatewayConnection, OnGatewayDisconnect {
-  @WebSocketServer()
-  server: Server
   // 客户端在线列表
   onlineList: object = new Object()
 
@@ -18,7 +15,7 @@ export class NoticeGateway implements OnGatewayConnection, OnGatewayDisconnect {
     private commonService:CommonService
   ) {}
 
-  handleConnection(client: WebSocket, data: IncomingMessage) {
+  handleConnection(client: WebSocket, ...args: any[]) {
     // ...
   }
 
@@ -47,16 +44,30 @@ export class NoticeGateway implements OnGatewayConnection, OnGatewayDisconnect {
     }
   }
 
-  // todo - 实时发送通知 (新建消息后发出)
+  // todo - 实时发送通知 (新建通知后发出)
   async sendNotice(notice: Notice) {
     const { recipient_id } = notice
     // 判断收件人是否在线, 如果在线就实时发送通知
     if(this.onlineList[recipient_id]) {
-      const client = this.onlineList[recipient_id]
+      const client:WebSocket = this.onlineList[recipient_id]
       client.send(JSON.stringify({
         event: "send-notice",
         data: notice
       }))
+    }
+  }
+
+  // todo - 实时发送广播 (仅限管理员使用)
+  async sendBroadcast(notice: Notice) {
+    const { sender_id } = notice
+    const { role }: User = await this.commonService.getEntityByUuid(PrismaModel.user, sender_id)
+    if (role === "admin") {
+      for(let key in this.onlineList) {
+        (this.onlineList[key] as WebSocket).send(JSON.stringify({
+          event: "send-broadcast",
+          data: notice
+        }))
+      }
     }
   }
 }

@@ -3,12 +3,14 @@ import { PrismaService } from 'src/common/prisma/prisma.service';
 import { CommonService } from 'src/common/common.service';
 import { CreateNoticeDto } from './dto/create-notice.dto';
 import { PrismaModel } from 'src/common/enum/PrismaModel';
+import { NoticeGateway } from './notice.gateway';
 
 @Injectable()
 export class NoticeService {
   constructor(
     private prisma:PrismaService,
-    private commonService:CommonService
+    private commonService:CommonService,
+    private noticeGateway:NoticeGateway
   ) {}
   
   // 服务 - 新建消息通知
@@ -29,6 +31,7 @@ export class NoticeService {
         sender_id
       }
     })
+    await this.noticeGateway.sendBroadcast(notice)
     return {
       tip: "成功新建消息通知",
       notice
