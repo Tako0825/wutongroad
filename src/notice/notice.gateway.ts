@@ -36,11 +36,11 @@ export class NoticeGateway implements OnGatewayConnection, OnGatewayDisconnect {
   async handleUserConnect(@MessageBody() user_id:string, @ConnectedSocket() client: any) {
     // 尝试判断用户是否存在, 若存在则将其添加至在线列表
     try {
-      const user:User = await this.commonService.getEntityByUuid(PrismaModel.user, user_id)
+      const user:User = await this.commonService.getEntityByUuid
+      (PrismaModel.user, user_id)
       if(!this.onlineList[user_id]) {
         this.onlineList[user_id] = client
         console.log(`在线用户+1————${user.nickname}(${user.uuid})`)
-        this.sendNotice("701b60b0-da06-4a0b-923e-8fd2f90771a3")
       }
     } catch(httpException) {
       throw new WsException(httpException)
@@ -51,11 +51,13 @@ export class NoticeGateway implements OnGatewayConnection, OnGatewayDisconnect {
   async sendNotice(notice_id: string) {
     const notice = await this.commonService.getEntityByUuid(PrismaModel.notice, notice_id)
     const { recipient_id } = notice
-    const client = this.onlineList[recipient_id]
-    
-    client.send(JSON.stringify({
-      event: "send-notice",
-      data: notice
-    }))
+    // 判断收件人是否在线, 如果在线就实时发送通知
+    if(this.onlineList[recipient_id]) {
+      const client = this.onlineList[recipient_id]
+      client.send(JSON.stringify({
+        event: "send-notice",
+        data: notice
+      }))
+    }
   }
 }

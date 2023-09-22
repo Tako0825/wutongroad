@@ -3,12 +3,17 @@ import { CreateCommentDto } from './dto/create-comment.dto';
 import { PrismaService } from 'src/common/prisma/prisma.service';
 import { CommonService } from 'src/common/common.service';
 import { PrismaModel } from 'src/common/enum/PrismaModel';
+import { NoticeService } from 'src/notice/notice.service';
+import { Topic } from '@prisma/client';
+import { NoticeGateway } from 'src/notice/notice.gateway';
 
 @Injectable()
 export class CommentService {
   constructor(
     private prisma:PrismaService,
-    private commonService:CommonService
+    private commonService:CommonService,
+    private noticeService:NoticeService,
+    private noticeGateway:NoticeGateway
   ) {}
 
   // 服务 - 新建评论
@@ -24,6 +29,17 @@ export class CommentService {
         parent_id
       }
     })
+    // 1、根据当前被评论的话题 id 寻找相应作者的 id
+    const { user_id: recipient_id }:Topic = await this.commonService.getEntityByUuid(PrismaModel.topic, topic_id)
+    // 2、根据当前评论新建新建通知
+    const { notice } = await this.noticeService.create({
+      type: "comment",
+      content,
+      sender_id: user_id,
+      recipient_id
+    })
+    // 3、向收件人发送实时通知
+    this.noticeGateway.sendNotice(notice.uuid)
     return {
       tip: "成功新建评论",
       comment
