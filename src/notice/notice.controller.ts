@@ -2,6 +2,7 @@ import { Controller, Get, Post, Body, Patch, Param, Delete, UsePipes } from '@ne
 import { NoticeService } from './notice.service';
 import { Validation } from 'src/common/validation';
 import { CreateNoticeDto } from './dto/create-notice.dto';
+import { CreateAdminNoticeDto } from './dto/create-admin-notice.dto';
 
 @Controller('notice')
 export class NoticeController {
@@ -12,6 +13,13 @@ export class NoticeController {
   @UsePipes(Validation)
   create(@Body() createNoticeDto:CreateNoticeDto) {
     return this.noticeService.create(createNoticeDto)
+  }
+
+  // 接口 - 新建管理员通知 (仅限管理员使用)
+  @Post("admin")
+  @UsePipes(Validation)
+  createAdminNotice(@Body() createAdminNoticeDto: CreateAdminNoticeDto) {
+    return this.noticeService.createAdminNotice(createAdminNoticeDto)
   }
 
   // 接口 - 获取指定用户未读通知数量

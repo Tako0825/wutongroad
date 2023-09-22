@@ -4,6 +4,8 @@ import { CommonService } from 'src/common/common.service';
 import { CreateNoticeDto } from './dto/create-notice.dto';
 import { PrismaModel } from 'src/common/enum/PrismaModel';
 import { NoticeGateway } from './notice.gateway';
+import { CreateAdminNoticeDto } from './dto/create-admin-notice.dto';
+import { User } from '@prisma/client';
 
 @Injectable()
 export class NoticeService {
@@ -13,7 +15,7 @@ export class NoticeService {
     private noticeGateway:NoticeGateway
   ) {}
   
-  // 服务 - 新建消息通知
+  // 服务 - 新建通知
   async create(createNoticeDto:CreateNoticeDto) {
     const { recipient_id, sender_id, content, type } = createNoticeDto
     const recipient = await this.commonService.getEntityByUuid(PrismaModel.user, recipient_id)
@@ -31,14 +33,37 @@ export class NoticeService {
         sender_id
       }
     })
-    await this.noticeGateway.sendBroadcast(notice)
     return {
       tip: "成功新建消息通知",
       notice
     }
   }
 
-  // 接口 - 获取指定用户未读通知数量
+  // 服务 - 新建管理员通知 (仅限管理员使用)
+  async createAdminNotice(createAdminNoticeDto: CreateAdminNoticeDto) {
+    const { content, sender_id, recipient_id } = createAdminNoticeDto
+    const user: User = await this.commonService.getEntityByUuid(PrismaModel.user, sender_id)
+    if(user.role !== "admin") {
+      throw new HttpException({
+        tip: "仅限管理员使用"
+      }, HttpStatus.UNAUTHORIZED)
+    }
+    const notice = await this.prisma.notice.create({
+      data: {
+        content,
+        sender_id,
+        recipient_id,
+        type: "admin"
+      }
+    })
+    await this.noticeGateway.sendBroadcast(notice)
+    return {
+      tip: "通知发布成功",
+      notice
+    }
+  }
+
+  // 服务 - 获取指定用户未读通知数量
   async getUserUnreadCount(user_id: string) {
     await this.commonService.getEntityByUuid(PrismaModel.user, user_id)
     const count = await this.prisma.notice.count({
