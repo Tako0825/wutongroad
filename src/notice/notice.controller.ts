@@ -2,24 +2,24 @@ import { Controller, Get, Post, Body, Patch, Param, Delete, UsePipes } from '@ne
 import { NoticeService } from './notice.service';
 import { Validation } from 'src/common/validation';
 import { CreateNoticeDto } from './dto/create-notice.dto';
-import { CreateAdminNoticeDto } from './dto/create-admin-notice.dto';
+import { CreateBroadcastDto } from './dto/create-broadcast.dto';
 
 @Controller('notice')
 export class NoticeController {
   constructor(private readonly noticeService: NoticeService) {}
 
-  // 接口 - 新建通知
+  // 接口 - 新建通知 (仅在管理员发送私人通知时作为接口调用, 通常在服务器内部使用)
   @Post()
   @UsePipes(Validation)
-  create(@Body() createNoticeDto:CreateNoticeDto) {
-    return this.noticeService.create(createNoticeDto)
+  createNotice(@Body() createNoticeDto:CreateNoticeDto) {
+    return this.noticeService.createNotice(createNoticeDto)
   }
 
-  // 接口 - 新建管理员通知 (仅限管理员使用)
-  @Post("admin")
+  // 接口 - 新建广播
+  @Post("broadcast")
   @UsePipes(Validation)
-  createAdminNotice(@Body() createAdminNoticeDto: CreateAdminNoticeDto) {
-    return this.noticeService.createAdminNotice(createAdminNoticeDto)
+  createBroadcast(@Body() createBroadcastDto:CreateBroadcastDto) {
+    return this.noticeService.createBroadcast(createBroadcastDto)
   }
 
   // 接口 - 获取指定用户未读通知数量

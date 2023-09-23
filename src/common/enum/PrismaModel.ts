@@ -3,5 +3,7 @@ export enum PrismaModel {
     category = "category",
     topic = "topic",
     comment = "comment",
-    notice = "notice"
+    notice = "notice",
+    broadcast = "broadcast",
+    broadcastStatus = "broadcastStatus"
 }

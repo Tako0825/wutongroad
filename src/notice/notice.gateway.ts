@@ -1,5 +1,5 @@
 import { ConnectedSocket, MessageBody, OnGatewayConnection, OnGatewayDisconnect, SubscribeMessage, WebSocketGateway, WsException } from '@nestjs/websockets';
-import { Notice, User } from '@prisma/client';
+import { $Enums, Broadcast, Notice, User } from '@prisma/client';
 import { CommonService } from 'src/common/common.service';
 import { PrismaModel } from 'src/common/enum/PrismaModel';
 import { PrismaService } from 'src/common/prisma/prisma.service';
@@ -44,10 +44,9 @@ export class NoticeGateway implements OnGatewayConnection, OnGatewayDisconnect {
     }
   }
 
-  // todo - 实时发送通知 (新建通知后发出)
+  // todo - 实时发送通知, 若用户当前处于在线状态则可接收
   async sendNotice(notice: Notice) {
     const { recipient_id } = notice
-    // 判断收件人是否在线, 如果在线就实时发送通知
     if(this.onlineList[recipient_id]) {
       const client:WebSocket = this.onlineList[recipient_id]
       client.send(JSON.stringify({
@@ -57,17 +56,13 @@ export class NoticeGateway implements OnGatewayConnection, OnGatewayDisconnect {
     }
   }
 
-  // todo - 实时发送广播 (仅限管理员使用)
-  async sendBroadcast(notice: Notice) {
-    const { sender_id } = notice
-    const { role }: User = await this.commonService.getEntityByUuid(PrismaModel.user, sender_id)
-    if (role === "admin") {
-      for(let key in this.onlineList) {
-        (this.onlineList[key] as WebSocket).send(JSON.stringify({
-          event: "send-broadcast",
-          data: notice
-        }))
-      }
+  // todo - 实时发送广播, 在线列表的所有用户可接收
+  async sendBroadcast(broadcast: Broadcast) {
+    for(let key in this.onlineList) {
+      (this.onlineList[key] as WebSocket).send(JSON.stringify({
+        event: "send-broadcast",
+        data: broadcast
+      }))
     }
   }
 }

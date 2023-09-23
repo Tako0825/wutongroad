@@ -18,14 +18,6 @@ async function main() {
     const uuidRandom_comment = commentsList[Random.integer(0,commentsList.length-1)].uuid
 
     // 在这里造数据
-    await prisma.notice.create({
-        data: {
-            sender_id: uuidRandom_user,
-            type: "comment",
-            content: Random.cparagraph(5,10),
-            is_read: true,
-        }
-    })
 }
 
 for(let i=0; i<10; i++) {

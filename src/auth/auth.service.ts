@@ -4,7 +4,7 @@ import { JwtService } from '@nestjs/jwt';
 import { PrismaService } from 'src/common/prisma/prisma.service';
 import { WechatApiService } from 'src/common/wechat-api/wechat-api.service';
 import { WechatApiUrl } from 'src/common/enum/WechatApiUrl';
-import { User } from '@prisma/client';
+import { $Enums, User } from '@prisma/client';
 import { UserService } from 'src/user/user.service';
  
 @Injectable()
@@ -91,7 +91,8 @@ export class AuthService {
         if(!user) {
             return await this.userService.create({
                 openid,
-                session_key
+                session_key,
+                role: $Enums.RoleType.user
             })
         }  
         // 若用户存在 - 更新用户的 session_key

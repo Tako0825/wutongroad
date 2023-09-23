@@ -4,7 +4,7 @@ import { PrismaService } from 'src/common/prisma/prisma.service';
 import { CommonService } from 'src/common/common.service';
 import { PrismaModel } from 'src/common/enum/PrismaModel';
 import { NoticeService } from 'src/notice/notice.service';
-import { Topic } from '@prisma/client';
+import { $Enums, Topic } from '@prisma/client';
 import { NoticeGateway } from 'src/notice/notice.gateway';
 
 @Injectable()
@@ -19,8 +19,9 @@ export class CommentService {
   // 服务 - 新建评论
   async create(createCommentDto: CreateCommentDto) {
     const { user_id, topic_id, content, parent_id } = createCommentDto
-    await this.commonService.getEntityByUuid(PrismaModel.user, user_id),
-    await this.commonService.getEntityByUuid(PrismaModel.topic, topic_id)
+    await this.commonService.getEntityByUuid(PrismaModel.user, user_id)
+    // 1、根据当前被评论的话题 id 寻找相应作者的 id
+    const topic: Topic = await this.commonService.getEntityByUuid(PrismaModel.topic, topic_id)
     const comment = await this.prisma.comment.create({
       data: {
         content,
@@ -29,14 +30,12 @@ export class CommentService {
         parent_id
       }
     })
-    // 1、根据当前被评论的话题 id 寻找相应作者的 id
-    const { user_id: recipient_id }:Topic = await this.commonService.getEntityByUuid(PrismaModel.topic, topic_id)
     // 2、根据当前评论新建新建通知
-    const { notice } = await this.noticeService.create({
-      type: "comment",
+    const { notice } = await this.noticeService.createNotice({
+      type: $Enums.NoticeType.comment,
       content,
       sender_id: user_id,
-      recipient_id
+      recipient_id: topic.user_id
     })
     // 3、向收件人发送实时通知
     this.noticeGateway.sendNotice(notice)

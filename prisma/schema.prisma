@@ -7,24 +7,21 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-enum ModelType {
-  user
-  category
-  topic 
-  comment
-  notice
-}
-
 // 用户
 model User {
   uuid        String   @id @default(uuid()) // uuid
   nickname    String   @default("uu") // 昵称
-  role        String   @default("user") // 角色
+  role        RoleType
   create_time DateTime @default(now()) // 创建时间
   avatar      String   @default("https://c-ssl.duitang.com/uploads/item/201912/25/20191225224833_zloky.jpg") // 头像
   gender      String?
   openid      String   @unique
   session_key String
+}
+
+enum RoleType {
+  user
+  admin
 }
 
 // 话题分类
@@ -64,16 +61,31 @@ model Comment {
 
 // 消息通知
 model Notice {
-  uuid         String @id @default(uuid()) // uuid
+  uuid         String     @id @default(uuid()) // uuid
   type         NoticeType // 类型
-  content      String? @db.Text // 内容
+  content      String     @db.Text // 内容
   sender_id    String // 寄件人 uuid
-  recipient_id String? // 收件人 uuid
-  is_read      Boolean @default(false)
+  recipient_id String // 收件人 uuid
+  is_read      Boolean    @default(false)
 }
 
 // 消息通知类型
 enum NoticeType {
   admin // 管理员通知
   comment // 评论通知
+}
+
+// 广播通知
+model Broadcast {
+  uuid      String @id @default(uuid())
+  content   String @db.Text // 内容
+  sender_id String
+}
+
+// 广播通知已读状态
+model BroadcastStatus {
+  uuid         String  @id @default(uuid())
+  notice_id    String
+  recipient_id String
+  is_read      Boolean @default(false)
 }

@@ -4,104 +4,98 @@ import { CommonService } from 'src/common/common.service';
 import { CreateNoticeDto } from './dto/create-notice.dto';
 import { PrismaModel } from 'src/common/enum/PrismaModel';
 import { NoticeGateway } from './notice.gateway';
-import { CreateAdminNoticeDto } from './dto/create-admin-notice.dto';
-import { User } from '@prisma/client';
+import { $Enums, Broadcast, User } from '@prisma/client';
+import { CreateBroadcastDto } from './dto/create-broadcast.dto';
+import { UserService } from 'src/user/user.service';
 
 @Injectable()
 export class NoticeService {
   constructor(
     private prisma:PrismaService,
     private commonService:CommonService,
+    private userService:UserService,
     private noticeGateway:NoticeGateway
   ) {}
   
   // 服务 - 新建通知
-  async create(createNoticeDto:CreateNoticeDto) {
-    const { recipient_id, sender_id, content, type } = createNoticeDto
-    const recipient = await this.commonService.getEntityByUuid(PrismaModel.user, recipient_id)
-    const sender = await this.commonService.getEntityByUuid(PrismaModel.user, sender_id)
-    if(recipient.uuid === sender.uuid) {
+  async createNotice(createNoticeDto:CreateNoticeDto) {
+    const { type, content, sender_id, recipient_id } = createNoticeDto
+    await this.commonService.getEntityByUuid(PrismaModel.user, recipient_id)
+    const sender: User =  await this.commonService.getEntityByUuid(PrismaModel.user, sender_id)
+    if(type === $Enums.NoticeType.admin && sender.role !== $Enums.NoticeType.admin) {
       throw new HttpException({
-        tip: "寄件人和收件人不允许是同一用户"
-      }, HttpStatus.UNPROCESSABLE_ENTITY)
+        tip: "权限不足, 仅管理员可通过调用接口的方式来新建通知"
+      }, HttpStatus.UNAUTHORIZED)
     }
-    const notice = await this.prisma.notice.create({
-      data: {
-        type,
-        content,
-        recipient_id,
-        sender_id
+    if(sender_id !== recipient_id) {
+      const notice = await this.prisma.notice.create({
+        data: {
+          type,
+          content,
+          sender_id,
+          recipient_id
+        }
+      })
+      return {
+        tip: "成功新建消息通知",
+        notice
       }
-    })
+    }
     return {
-      tip: "成功新建消息通知",
-      notice
+      tip: "收件人和寄件人是同一用户, 不另外新建通知"
     }
   }
 
-  // 服务 - 新建管理员通知 (仅限管理员使用)
-  async createAdminNotice(createAdminNoticeDto: CreateAdminNoticeDto) {
-    const { content, sender_id, recipient_id } = createAdminNoticeDto
-    const user: User = await this.commonService.getEntityByUuid(PrismaModel.user, sender_id)
-    if(user.role !== "admin") {
+  // 服务 - 新建广播
+  async createBroadcast(createBroadcastDto: CreateBroadcastDto) {
+    const { content, sender_id } = createBroadcastDto
+    const { role }: User = await this.commonService.getEntityByUuid(PrismaModel.user, sender_id)
+    if(role !== $Enums.RoleType.admin) {
       throw new HttpException({
-        tip: "仅限管理员使用"
+        tip: "权限不足, 仅管理员可通过调用接口的方式来新建广播"
       }, HttpStatus.UNAUTHORIZED)
     }
-    const notice = await this.prisma.notice.create({
+    const broadcast = await this.prisma.broadcast.create({
       data: {
         content,
-        sender_id,
-        recipient_id,
-        type: "admin"
+        sender_id
       }
     })
-    await this.noticeGateway.sendBroadcast(notice)
+    const { userList }  = await this.userService.findAll()
+    // 1.为所有用户新建广播状态, 以记录用户各自的已读状态
+    userList.forEach(async user => {
+      await this.createBroadcastStatus(broadcast, user)
+    })
+    // 2.将广播实时播报给当前在线用户
+    await this.noticeGateway.sendBroadcast(broadcast)
     return {
-      tip: "通知发布成功",
-      notice
+      tip: "成功新建广播",
+      broadcast
     }
+  }
+
+  // 新建广播状态
+  private async createBroadcastStatus(broadcast: Broadcast, user:User) {
+    await this.prisma.broadcastStatus.create({
+      data: {
+        notice_id: broadcast.uuid,
+        recipient_id: user.uuid
+      }
+    })
   }
 
   // 服务 - 获取指定用户未读通知数量
   async getUserUnreadCount(user_id: string) {
-    await this.commonService.getEntityByUuid(PrismaModel.user, user_id)
-    const count = await this.prisma.notice.count({
-      where: {
-        recipient_id: user_id,
-        is_read: false
-      }
-    })
-    return {
-      tip: "成功获取未读通知数量",
-      count
-    }
+
   }
 
   // 服务 - 获取指定用户所有通知
   async findUserAll(user_id: string) {
-    await this.commonService.getEntityByUuid(PrismaModel.user, user_id)
-    const noticeList = await this.prisma.notice.findMany({
-      where: {
-        recipient_id: user_id
-      }
-    })
-    return {
-      tip: "成功获取所有通知",
-      noticeList
-    }
+
   }
 
   // 服务 - 清空指定用户所有通知
   async clearUserAll(user_id: string) {
-    await this.commonService.getEntityByUuid(PrismaModel.user, user_id)
-    await this.prisma.notice.deleteMany({
-      where: {
-        recipient_id: user_id
-      }
-    })
-    return {
-      tip: "成功删除所有通知"
-    }
+
   }
 }

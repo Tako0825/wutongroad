@@ -1,9 +1,10 @@
-import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { CommonService } from 'src/common/common.service';
 import { PrismaService } from 'src/common/prisma/prisma.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { PrismaModel } from 'src/common/enum/PrismaModel';
+import { User } from '@prisma/client';
 
 @Injectable()
 export class UserService {
@@ -14,14 +15,15 @@ export class UserService {
 
   // 服务 - 创建用户
   async create(createUserDto:CreateUserDto) {
-    const { openid, session_key } = createUserDto
+    const { openid, session_key, role } = createUserDto
     const user = await this.prisma.user.create({
       data: {
         openid,
         session_key,
+        role
       }
     })
-    const { nickname, gender, role, create_time, avatar, uuid } = user
+    const { nickname, gender, create_time, avatar, uuid } = user
     return {
       tip: "成功创建新用户",
       userInfo: {
@@ -48,6 +50,15 @@ export class UserService {
         avatar,
         create_time
       }
+    }
+  }
+
+  // 服务 - 查找所有用户
+  async findAll(): Promise<{ tip:string, userList:User[] }> {
+    const userList = await this.prisma.user.findMany()
+    return {
+      tip: "成功查找所有用户",
+      userList
     }
   }
 
